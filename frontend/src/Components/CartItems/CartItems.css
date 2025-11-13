@@ -1,0 +1,72 @@
+.cartitems {
+  width: 80%;
+  margin: 50px auto;
+  font-family: "Poppins", sans-serif;
+}
+
+.cartitems-format-main {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.cartitems-product-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.cartitems-remove-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.cartitems-remove-icon:hover {
+  transform: scale(1.2);
+}
+
+.cartitems-total {
+  margin-top: 50px;
+  background: #fafafa;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.cartitems-promocode input {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+}
+
+.cartitems-promocode button {
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+.whatsapp-button {
+  background-color: #25d366;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.whatsapp-button:hover {
+  background-color: #1ebe5d;
+  transform: scale(1.02);
+}
