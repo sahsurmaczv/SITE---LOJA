@@ -21,9 +21,12 @@ app.use(express.json());
 
 // 🔐 CORS com múltiplas origens (frontend e admin)
 const allowedOrigins = [
-  "http://localhost:3000", // loja (cliente)
-  "http://localhost:3001", // painel admin
+  "http://localhost:3000",  // old CRA frontend
+  "http://localhost:3001",  // old CRA admin
+  "http://localhost:5173",  // Vite admin
+  "http://localhost:5174",  // Vite frontend
 ];
+
 
 app.use(
   cors({
