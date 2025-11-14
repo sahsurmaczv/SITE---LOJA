@@ -1,54 +1,81 @@
-import React, { useEffect, useState } from "react";
+// src/Pages/ShopCategory.jsx
+import React, { useContext, useState } from "react";
+import { ShopContext } from "../Context/ShopContext";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import "./CSS/ShopCategory.css";
-import Item from "../Components/Item/Item";
-import { Link, useParams } from "react-router-dom";
+import { backend_url } from "../App";
 
 const ShopCategory = () => {
-  const { categoriaId } = useParams(); // pega a categoria da URL
-  const [allproducts, setAllProducts] = useState([]);
+  const { products } = useContext(ShopContext);
+  const { categoriaId } = useParams();
+  const navigate = useNavigate();
 
-  const fetchInfo = () => { 
-    fetch('http://localhost:4000/allproducts')
-      .then((res) => res.json())
-      .then((data) => setAllProducts(data));
-  };
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    fetchInfo();
-  }, []);
+  // 🔎 Filtra produtos pela categoria + nome pesquisado
+  const filteredProducts = products.filter(
+    (p) =>
+      p.category === categoriaId &&
+      p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="shopcategory">
+    <div className="category-page">
 
-      {/* Título baseado na categoria */}
-      <h2 className="shopcategory-title">
-        {categoriaId.replace("-", " ").toUpperCase()}
-      </h2>
+      {/* CABEÇALHO */}
+      <div className="category-header">
+        {/* Botão Voltar */}
+        <button className="back-btn" onClick={() => navigate(-1)}>
+          ⬅ Voltar
+        </button>
 
-      <div className="shopcategory-indexSort">
-        <p><span>Mostrando produtos</span></p>
-        <div className="shopcategory-sort">
-          Ordenar por  
+        {/* Campo de Busca */}
+        <div className="search-wrapper">
+          <input
+            type="text"
+            placeholder="Buscar produto..."
+            className="search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          {search.length > 0 && (
+            <button className="clear-search" onClick={() => setSearch("")}>
+              ✕
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="shopcategory-products">
-        {allproducts
-          .filter(item => item.category === categoriaId)
-          .map((item, i) => (
-            <Item
-              id={item.id}
-              key={i}
-              name={item.name}
-              image={item.image}
-              new_price={item.new_price}
-              old_price={item.old_price}
-            />
-          ))}
-      </div>
+      {/* Título da categoria */}
+      <h1 className="category-title">{categoriaId.toUpperCase()}</h1>
 
-      <div className="shopcategory-loadmore">
-        <Link to="/" style={{ textDecoration: 'none' }}>Voltar</Link>
+      {/* Produtos */}
+      <div className="category-products-container">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <div className="category-product-card" key={product.id}>
+              <Link to={`/product/${product.id}`}>
+                <div className="product-img-wrapper">
+  <img
+  src={
+    product.image?.startsWith("http")
+      ? product.image
+      : `${backend_url}${product.image}`
+  }
+  alt={product.name}
+/>
+
+</div>
+
+                <p className="product-name">{product.name}</p>
+                <p className="product-price">R$ {product.new_price}</p>
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="no-products">Nenhum produto encontrado.</p>
+        )}
       </div>
     </div>
   );

@@ -24,7 +24,10 @@ const LoginSignup = () => {
       const dataObj = await resp.json();
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
-        window.location.replace("/");
+
+// força ShopContext a recarregar o carrinho
+window.location.reload();
+
       } else {
         alert(dataObj.message || dataObj.error || "Erro no login");
       }

@@ -1,0 +1,31 @@
+export const categories = [
+  { value: "fontes", label: "Fontes" },
+  { value: "gabinetes", label: "Gabinetes" },
+  { value: "memorias", label: "Memórias RAM" },
+  { value: "gpu", label: "Placas de Vídeo" },
+  { value: "placamae", label: "Placa Mãe" },
+  { value: "processadores", label: "Processadores" },
+  { value: "refrigeracao", label: "Refrigeração" },
+  { value: "ssd", label: "SSD" },
+
+  { value: "adaptadores", label: "Adaptadores" },
+  { value: "repetidores", label: "Repetidores" },
+  { value: "roteadores", label: "Roteadores" },
+  { value: "switches", label: "Switches" },
+
+  { value: "caixasom", label: "Caixa de Som" },
+  { value: "controles", label: "Controles" },
+  { value: "fones", label: "Fones de Ouvido" },
+  { value: "mouses", label: "Mouses" },
+  { value: "mousepads", label: "Mousepads" },
+  { value: "teclados", label: "Teclados" },
+
+  { value: "bolsas", label: "Bolsas / Cases" },
+  { value: "carregadores", label: "Carregadores USB" },
+  { value: "casehd", label: "Case para HD" },
+  { value: "pendrives", label: "Pendrives" },
+
+  { value: "suportecpu", label: "Suporte para CPU" },
+  { value: "suportemonitor", label: "Suporte para Monitor" },
+  { value: "suportenotebook", label: "Suporte para Notebook" }
+];

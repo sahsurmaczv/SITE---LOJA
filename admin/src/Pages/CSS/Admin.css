@@ -1,8 +1,11 @@
-.admin{
-    display: flex;
+@media(max-width:1000px){
+  .container-center{padding:18px}
+  aside{display:none} /* hide sidebar on small screens */
 }
-@media(max-width:800px){
-    .admin{
-        flex-direction: column;
-    }
+.admin-content {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-top: 20px;
+  padding-bottom: 40px;
 }

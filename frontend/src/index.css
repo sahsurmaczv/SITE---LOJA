@@ -1,3 +1,4 @@
+/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -5,14 +6,8 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.main-content {
-  margin-top: 70px; /* ajuste conforme altura real da navbar */
-}
-
-
-a {
-  text-decoration: none !important;
-  color: inherit;
+html, body {
+  height: 100%;
 }
 
 body {
@@ -20,17 +15,33 @@ body {
   color: #222;
 }
 
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* CONTEÚDO PRINCIPAL (EMPURRA FOOTER PARA BAIXO) */
+.main-content {
+  flex: 1;         /* ESSENCIAL para o footer ficar no fim */
+  margin-top: 60px; /* valor EXATO da navbar */
+  padding: 0;
+}
+
+/* LINKS */
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* LAYOUT GERAL */
 .shop-layout {
   display: flex;
 }
 
+/* SIDEBAR DESKTOP */
 .sidebar-desktop {
   display: none;
-}
-
-.shop-content {
-  flex: 1;
-  padding-left: 0;
 }
 
 @media (min-width: 992px) {
@@ -61,17 +72,17 @@ body {
   background: rgba(0,0,0,0.5);
   z-index: 998;
 }
-.shop-layout {
-  display: flex;
-}
 
+/* ÁREA PRINCIPAL SEM DUPLICAÇÕES */
 .shop-content {
-  margin-left: 260px;
   width: 100%;
+  flex: 1;
+  padding-left: 0;
 }
 
 @media (max-width: 900px) {
   .shop-content {
+    padding-left: 0;
     margin-left: 0;
   }
 }

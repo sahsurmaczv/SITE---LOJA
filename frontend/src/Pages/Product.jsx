@@ -1,28 +1,34 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Breadcrums from '../Components/Breadcrums/Breadcrums'
-import ProductDisplay from '../Components/ProductDisplay/ProductDisplay'
-import DescriptionBox from '../Components/DescriptionBox/DescriptionBox'
-import RelatedProducts from '../Components/RelatedProducts/RelatedProducts'
-import { useParams } from 'react-router-dom'
-import { ShopContext } from '../Context/ShopContext'
+// src/Pages/Product.jsx
+import React, { useContext, useEffect, useState } from "react";
+import ProductDisplay from '../Components/ProductDisplay/ProductDisplay';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ShopContext } from '../Context/ShopContext';
+import "./CSS/ProductPage.css";
 
 const Product = () => {
-  const {products} = useContext(ShopContext);
-  const {productId} = useParams();
-  const [product,setProduct] = useState(false);
+  const { products } = useContext(ShopContext);
+  const { productId } = useParams();
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    setProduct(products.find((e)=>e.id === Number(productId)))
-  },[products,productId])
+  const [product, setProduct] = useState(null);
 
-  return product ? (
-    <div>
-      <Breadcrums product={product}/>
-      <ProductDisplay product={product}/>
-      <DescriptionBox/>
-      <RelatedProducts id={product.id} category={product.category}/>
+  useEffect(() => {
+    setProduct(products.find((e) => e.id === Number(productId)));
+  }, [products, productId]);
+
+  if (!product) return <p style={{ marginTop: "120px", textAlign: "center" }}>Carregando...</p>;
+
+  return (
+    <div className="productpage">
+
+      {/* 🔙 Botão de voltar */}
+      <button className="back-btn-product" onClick={() => navigate(-1)}>
+        ⬅ Voltar
+      </button>
+
+      <ProductDisplay product={product} />
     </div>
-  ) : null
-}
+  );
+};
 
-export default Product
+export default Product;

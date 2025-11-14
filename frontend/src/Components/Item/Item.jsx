@@ -10,19 +10,22 @@ const Item = (props) => {
   <img
   onClick={() => window.scrollTo(0, 0)}
   src={
-    props.image?.startsWith("http")
-      ? props.image
-      : `${backend_url}${props.image}`
-  }
+  props.image?.startsWith("http")
+    ? props.image
+    : `${backend_url}${props.image}`
+}
+
   alt={props.name}
 />
 
 </Link>
 <p>{props.name}</p>
 <div className="item-prices">
-  <div className="item-price-new">{currency}{props.new_price}</div>
-  <div className="item-price-old">{currency}{props.old_price}</div>
+  <div className="item-price-new">
+    {currency}{Number(props.new_price).toFixed(2)}
+  </div>
 </div>
+
 
     </div>
   )

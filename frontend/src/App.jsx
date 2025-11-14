@@ -12,6 +12,7 @@ import ShopCategory from "./Pages/ShopCategory";
 import LoginSignup from "./Pages/LoginSignup";
 
 export const backend_url = "http://localhost:4000";
+
 export const currency = "R$";
 
 // 🔹 Componente responsável por rolar até a seção (#sobre, #sistema, etc.)
@@ -66,9 +67,9 @@ function App() {
           <Route path="/categoria/:categoriaId" element={<ShopCategory />} />
         </Routes>
 
-        <Footer />
+       
       </div>
-
+       <Footer />
     </Router>
   );
 }
