@@ -2,56 +2,62 @@ import React, { useContext } from "react";
 import "./CartItems.css";
 import { ShopContext } from "../../Context/ShopContext";
 import { backend_url, currency } from "../../App";
+import cross_icon from "../Assets/logo.png"; // certifique-se deste caminho existir
 
 const CartItems = () => {
-  const { products, cartItems, removeFromCart, getTotalCartAmount } = useContext(ShopContext);
+  const { products, cartItems, addToCart, removeFromCart, getTotalCartAmount } =
+    useContext(ShopContext);
 
   const totalAmount = getTotalCartAmount();
   const hasItems = Object.values(cartItems).some((qtd) => qtd > 0);
 
-  // 🔹 Número da empresa no formato internacional (55 = Brasil)
-  const phoneNumber = "5542999999999"; // <-- coloque aqui o WhatsApp da empresa
+  const phoneNumber = "5542998275219";
 
-  // 🔹 Monta a mensagem com os produtos do carrinho
+  // Monta mensagem do pedido para WhatsApp
   const buildWhatsAppMessage = () => {
-    let message = "Olá! Gostaria de solicitar os seguintes produtos:%0A%0A";
+    let msg = "Olá! Gostaria de solicitar os seguintes produtos:%0A%0A";
+
     products.forEach((product) => {
-      const quantity = cartItems[product.id];
-      if (quantity > 0) {
-        const itemTotal = (product.new_price * quantity).toFixed(2);
-        message += `• ${product.name} (${quantity}x) - ${currency}${itemTotal}%0A`;
+      const q = cartItems[product.id];
+      if (q > 0) {
+        msg += `• ${product.name} (${q}x) - ${currency}${(
+          product.new_price * q
+        ).toFixed(2)}%0A`;
       }
     });
-    message += `%0A💰 *Total:* ${currency}${totalAmount.toFixed(2)}`;
-    return message;
+
+    msg += `%0A💰 Total da compra: *${currency}${totalAmount.toFixed(2)}*`;
+
+    return msg;
   };
 
-  // 🔹 Abre o WhatsApp com a mensagem pronta
   const sendWhatsAppOrder = () => {
-    if (!hasItems) {
-      alert("Seu carrinho está vazio 🛒");
-      return;
-    }
-    const message = buildWhatsAppMessage();
-    const url = `https://wa.me/${phoneNumber}?text=${message}`;
+    if (!hasItems) return alert("Seu carrinho está vazio 🛒");
+
+    const url = `https://wa.me/${phoneNumber}?text=${buildWhatsAppMessage()}`;
     window.open(url, "_blank");
   };
 
+  // Função de imagem universal
+  const getImageUrl = (img) =>
+    img?.startsWith("http") ? img : `${backend_url}${img}`;
+
   return (
-    <div className="cartitems">
+    <div className="cartitems fade-in">
       <div className="cartitems-format-main">
-        <p>Product</p>
-        <p>Title</p>
-        <p>Price</p>
-        <p>Quantity</p>
+        <p>Produto</p>
+        <p>Descrição</p>
+        <p>Preço</p>
+        <p>Qtd</p>
         <p>Total</p>
-        <p>Remove</p>
+        <p>Remover</p>
       </div>
+
       <hr />
 
       {!hasItems ? (
-        <div style={{ textAlign: "center", padding: "50px 0", color: "#777" }}>
-          <p>Your cart is empty 🛒</p>
+        <div className="empty-cart">
+          <p>Seu carrinho está vazio 🛒</p>
         </div>
       ) : (
         products.map((product) => {
@@ -61,40 +67,69 @@ const CartItems = () => {
           return (
             <div key={product.id}>
               <div className="cartitems-format-main cartitems-format">
+
+                {/* IMG */}
                 <img
                   className="cartitems-product-icon"
-                  src={`${backend_url}${product.image}`}
+                  src={getImageUrl(product.image)}
                   alt={product.name}
                 />
+
+                {/* NOME */}
                 <p className="cartitems-product-title">{product.name}</p>
+
+                {/* PREÇO */}
                 <p>
                   {currency}
-                  {product.new_price}
+                  {Number(product.new_price).toFixed(2)}
                 </p>
-                <button className="cartitems-quantity">{quantity}</button>
+
+                {/* QUANTIDADE COM + E - */}
+                <div className="cartitems-quantity-box">
+                  <button
+                    className="qty-btn"
+                    onClick={() => removeFromCart(product.id)}
+                  >
+                    -
+                  </button>
+
+                  <span className="qty-number">{quantity}</span>
+
+                  <button
+                    className="qty-btn"
+                    onClick={() => addToCart(product.id)}
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* TOTAL ITEM */}
                 <p>
                   {currency}
                   {(product.new_price * quantity).toFixed(2)}
                 </p>
+
+                {/* REMOVER */}
                 <img
                   onClick={() => removeFromCart(product.id)}
                   className="cartitems-remove-icon"
                   src={cross_icon}
-                  alt="Remove item"
-                  title="Remove item"
+                  alt="Remover item"
                 />
               </div>
+
               <hr />
             </div>
           );
         })
       )}
 
-      {/* 🔹 Totais e botão WhatsApp */}
       {hasItems && (
         <div className="cartitems-down">
-          <div className="cartitems-total">
-            <h1>Cart Totals</h1>
+          {/* TOTAL */}
+          <div className="cartitems-total card">
+            <h1>Resumo do Pedido</h1>
+
             <div>
               <div className="cartitems-total-item">
                 <p>Subtotal</p>
@@ -103,12 +138,9 @@ const CartItems = () => {
                   {totalAmount.toFixed(2)}
                 </p>
               </div>
+
               <hr />
-              <div className="cartitems-total-item">
-                <p>Shipping Fee</p>
-                <p>Free</p>
-              </div>
-              <hr />
+
               <div className="cartitems-total-item">
                 <h3>Total</h3>
                 <h3>
@@ -118,17 +150,17 @@ const CartItems = () => {
               </div>
             </div>
 
-            {/* 💬 Botão de envio via WhatsApp */}
             <button onClick={sendWhatsAppOrder} className="whatsapp-button">
               ENVIAR PEDIDO VIA WHATSAPP 📱
             </button>
           </div>
 
-          <div className="cartitems-promocode">
-            <p>If you have a promo code, enter it here:</p>
+          {/* CUPOM */}
+          <div className="cartitems-promocode card">
+            <p>Possui um cupom de desconto?</p>
             <div className="cartitems-promobox">
-              <input type="text" placeholder="Promo code" />
-              <button>Submit</button>
+              <input type="text" placeholder="Digite o cupom" />
+              <button>Aplicar</button>
             </div>
           </div>
         </div>

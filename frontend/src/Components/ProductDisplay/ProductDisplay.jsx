@@ -3,53 +3,45 @@ import "./ProductDisplay.css";
 import { ShopContext } from "../../Context/ShopContext";
 import { backend_url, currency } from "../../App";
 
-const ProductDisplay = ({product}) => {
+const ProductDisplay = ({ product }) => {
+  const { addToCart } = useContext(ShopContext);
 
-  const {addToCart} = useContext(ShopContext);
+  if (!product) return <p>Carregando...</p>;
 
   return (
-    <div className="productdisplay">
-      <div className="productdisplay-left">
-        <div className="productdisplay-img-list">
-          <img src={`${backend_url}${product.image}`} alt="img" />
-          <img src={`${backend_url}${product.image}`} alt="img" />
-          <img src={`${backend_url}${product.image}`} alt="img" />
-          <img src={`${backend_url}${product.image}`} alt="img" />
-        </div>
-        <div className="productdisplay-img">
-          <img className="productdisplay-main-img" src={`${backend_url}${product.image}`} alt="img" />
-        </div>
+    <div className="pd-container">
+
+      {/* LEFT */}
+      <div className="pd-left">
+        <img 
+  className="pd-image"
+  src={
+    product.image?.startsWith("http")
+      ? product.image
+      : `${backend_url}${product.image}`
+  }
+  alt={product.name}
+/>
+
       </div>
-      <div className="productdisplay-right">
-        <h1>{product.name}</h1>
-        <div className="productdisplay-right-stars">
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_dull_icon} alt="" />
-          <p>(122)</p>
-        </div>
-        <div className="productdisplay-right-prices">
-          <div className="productdisplay-right-price-old">{currency}{product.old_price}</div>
-          <div className="productdisplay-right-price-new">{currency}{product.new_price}</div>
-        </div>
-        <div className="productdisplay-right-description">
-        {product.description}
-        </div>
-        <div className="productdisplay-right-size">
-          <h1>Select Size</h1>
-          <div className="productdisplay-right-sizes">
-            <div>S</div>
-            <div>M</div>
-            <div>L</div>
-            <div>XL</div>
-            <div>XXL</div>
-          </div>
-        </div>
-        <button onClick={()=>addToCart(product.id)}>ADD TO CART</button>
-        <p className="productdisplay-right-category"><span>Category :</span> Women, T-shirt, Crop Top</p>
-        <p className="productdisplay-right-category"><span>Tags :</span> Modern, Latest</p>
+
+      {/* RIGHT */}
+      <div className="pd-right">
+        <h1 className="pd-title">{product.name}</h1>
+
+        <p className="pd-price">
+          {currency}{Number(product.new_price).toFixed(2)}
+        </p>
+
+        <p className="pd-description">{product.description}</p>
+
+        <button className="pd-btn" onClick={() => addToCart(product.id)}>
+          Adicionar ao Carrinho
+        </button>
+
+        <p className="pd-category">
+          Categoria: <span>{product.category}</span>
+        </p>
       </div>
     </div>
   );

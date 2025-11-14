@@ -1,85 +1,134 @@
-.loginsignup{
-    width: 100%;
-    min-height: 90vh;
-    background: #fce3fe;
-    padding-top: 100px;
+/* ===============================
+   CONTAINER GERAL (fundo igual ao do Shop)
+================================ */
+.loginsignup {
+  width: 100%;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: #f7f7f7;
+  animation: fadeIn 0.6s ease forwards;
 }
-.loginsignup-container{
-    width: 90%;
-    max-width: 550px;
-    background: white;
-    margin: auto;
-    padding: 30px 40px;
-    box-sizing: border-box;
+
+/* ===============================
+   CARD (igual aos cards de serviços, só que maior)
+================================ */
+.loginsignup-container {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 32px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  text-align: center;
+  animation: fadeInUp 0.7s ease-out forwards;
 }
-.loginsignup-container h1{
-    margin: 15px 0px;
+
+/* ===============================
+   TÍTULO
+================================ */
+.loginsignup-container h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #007aff;
+  margin-bottom: 20px;
 }
-.loginsignup-fields{
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    margin-top: 20px;
+
+/* ===============================
+   CAMPOS
+================================ */
+.loginsignup-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
 }
-.loginsignup-fields input{
-    height: 60px;
-    width: 100%;
-    padding-left: 20px;
-    border: 1px solid #c9c9c9;
-    outline: none;
-    color: #5c5c5c;
-    font-size: 18px;
-    box-sizing: border-box;
+
+.loginsignup-fields input {
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid #d1d1d1;
+  background: #fafafa;
+  color: #333;
+  transition: 0.2s ease;
 }
-.loginsignup-container button{
-    width: 100%;
-    height: 60px;
-    color: white;
-    background: #ff4141;
-    margin-top: 30px;
-    border: none;
-    font-size: 22px;
-    font-weight: 500;
-    cursor: pointer;
+
+.loginsignup-fields input:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 6px rgba(0,122,255,0.3);
 }
-.loginsignup-login{
-    margin-top: 20px;
-    color: #5c5c5c;
-    font-size: 16px;
-    font-weight: 500;
+
+/* ===============================
+   BOTÃO (igual hover dos cards)
+================================ */
+.loginsignup-container button {
+  width: 100%;
+  padding: 14px;
+  background: #007aff;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: 0.25s ease;
 }
-.loginsignup-login span{
-    color: #ff4141;
-    font-weight: 600;
+
+.loginsignup-container button:hover {
+  background: #0063cc;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
-.loginsignup-agree{
-    display: flex;
-    align-items: center;
-    margin-top: 18px;
-    gap: 10px;
-    color: #5c5c5c;
-    font-size: 15px;
-    font-weight: 500;
+
+/* ===============================
+   LINK LOGIN / SIGNUP
+================================ */
+.loginsignup-login {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
 }
-@media(max-width: 600px){
-    .loginsignup-container h1{
-        font-size: 22px;
-        margin: 0px;
-    }
-    .loginsignup-container{
-        padding: 30px 20px;
-    }
-    .loginsignup-fields input{
-        padding-left: 10px;
-        font-size: 16px;
-        height: 50px;
-    }
-    .loginsignup-fields{
-        gap: 15px;
-    }
-    .loginsignup-container button{
-        height: 50px;
-        margin-top: 20px;
-        font-size: 17px;
-    }
+
+.loginsignup-login span {
+  color: #007aff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.loginsignup-login span:hover {
+  text-decoration: underline;
+}
+
+/* ===============================
+   TERMOS
+================================ */
+.loginsignup-agree {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: #555;
+  font-size: 12px;
+}
+
+.loginsignup-agree input {
+  transform: scale(1.1);
+}
+
+/* ===============================
+   ANIMAÇÕES iguais ao Shop
+================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0;}
+  to { opacity: 1; }
 }

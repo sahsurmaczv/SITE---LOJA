@@ -66,9 +66,9 @@ function App() {
           <Route path="/categoria/:categoriaId" element={<ShopCategory />} />
         </Routes>
 
-        <Footer />
+       
       </div>
-
+       <Footer />
     </Router>
   );
 }

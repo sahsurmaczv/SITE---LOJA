@@ -1,72 +1,120 @@
 .cartitems {
-  width: 80%;
-  margin: 50px auto;
-  font-family: "Poppins", sans-serif;
+  max-width: 1100px;
+  margin: 80px auto;
+  padding: 20px;
 }
 
+/* HEADER */
 .cartitems-format-main {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
-  align-items: center;
-  text-align: center;
+  grid-template-columns: 1.2fr 2fr 1fr 1.3fr 1fr 0.7fr;
+  gap: 12px;
   font-weight: 600;
-  color: #333;
+  color: #007aff;
+  margin-bottom: 12px;
 }
 
+/* IMG DO PRODUTO */
 .cartitems-product-icon {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 6px;
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
 }
 
+/* REMOVER */
 .cartitems-remove-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
   cursor: pointer;
-  transition: transform 0.2s;
+  opacity: 0.7;
+  transition: 0.2s ease;
 }
 
 .cartitems-remove-icon:hover {
-  transform: scale(1.2);
+  opacity: 1;
+  transform: scale(1.15);
 }
 
-.cartitems-total {
-  margin-top: 50px;
-  background: #fafafa;
-  padding: 30px;
-  border-radius: 10px;
+/* QUANTIDADE */
+.cartitems-quantity-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.cartitems-promocode input {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px 0 0 5px;
-}
-
-.cartitems-promocode button {
-  padding: 10px 20px;
+.qty-btn {
+  background: #007aff;
   border: none;
-  background: #007bff;
   color: white;
-  border-radius: 0 5px 5px 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s ease;
 }
+
+.qty-btn:hover {
+  background: #0063cc;
+}
+
+.qty-number {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/************* TOTAL *************/
+.cartitems-down {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* resumo */
+.cartitems-total h1 {
+  color: #007aff;
+  margin-bottom: 20px;
+}
+
+.cartitems-total-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+/************* WHATSAPP *************/
 .whatsapp-button {
-  background-color: #25d366;
+  width: 100%;
+  margin-top: 15px;
+  background: #25d366;
+  padding: 14px;
+  border-radius: 12px;
   color: white;
   font-size: 16px;
   font-weight: 600;
-  padding: 14px 22px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  width: 100%;
-  margin-top: 20px;
+  transition: 0.25s ease;
 }
 
 .whatsapp-button:hover {
-  background-color: #1ebe5d;
-  transform: scale(1.02);
+  background: #1db855;
+  transform: translateY(-2px);
+}
+
+/************* EMPTY CART *************/
+.empty-cart {
+  text-align: center;
+  padding: 40px;
+  font-size: 17px;
+  color: #777;
 }

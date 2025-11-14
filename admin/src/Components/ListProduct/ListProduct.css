@@ -1,58 +1,199 @@
-.listproduct {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 740px;
-  padding: 10px 50px;
-  margin: 30px;
-  border-radius: 6px;
-  background: #fff;
+/* ================================
+   CONTAINER
+================================ */
+.lp-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
-.listproduct-format-main{
+
+/* HEADER */
+.lp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.lp-header h2 {
+  font-size: 26px;
+  color: #007aff;
+}
+
+.lp-search {
+  padding: 12px 16px;
+  width: 260px;
+  border-radius: 10px;
+  border: 1px solid #dadada;
+  background: #fafafa;
+}
+
+/* ================================
+   TABLE HEAD
+================================ */
+.lp-table-head {
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-  padding: 20px 0px;
-  color: #454545;
-  font-size: 15px;
+  grid-template-columns: 140px 1fr 120px 140px 120px;
+  padding: 12px 0;
+  color: #555;
   font-weight: 600;
 }
 
-.listproduct-format{
-  width: 100%;
+/* ================================
+   LINHA
+================================ */
+.lp-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 120px 140px 120px;
+  padding: 16px 0;
+  background: #ffffff;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+  padding-left: 12px;
   align-items: center;
-  font-weight: 500;
 }
-.listproduct-product-icon{
-    height: 80px;
+
+.lp-img-box img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
 }
-.listproduct-remove-icon{
+
+.lp-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+
+.lp-desc {
+  font-size: 13px;
+  color: #666;
+}
+
+.lp-price {
+  font-weight: 600;
+  color: #333;
+}
+
+.lp-cat {
+  color: #444;
+}
+
+/* AÇÕES */
+.lp-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lp-btn-edit {
+  background: #007aff;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
   cursor: pointer;
-  margin: auto;
 }
-.listproduct-allproducts{
-  width: 100%;
+
+.lp-remove {
+  width: 22px;
+  cursor: pointer;
+  opacity: .7;
+}
+
+.lp-remove:hover {
+  opacity: 1;
+}
+
+/* ================================
+   MODAL / OVERLAY
+================================ */
+.lp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.lp-modal {
+  width: 95%;
+  max-width: 900px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 14px;
+  padding: 25px;
   overflow-y: auto;
 }
-.listproduct-allproducts::-webkit-scrollbar{
-    display: none;
+
+.lp-modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-@media(max-width:800px){
-  .listproduct {
-    box-sizing: border-box;
-    width: 95%;
-    height: 100%;
-    padding: 10px 30px;
-    margin: 20px auto;
-  }
-  .listproduct-format-main{
-    padding: 15px 0px;
-    color: #454545;
-    font-size: 12px;
-  }
-  .listproduct-product-icon{
-    height: 60px;
+
+.lp-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
 }
+
+/* GRID */
+.lp-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.lp-col label {
+  font-size: 15px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.lp-col input,
+.lp-col textarea {
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  background: #fafafa;
+}
+
+.lp-col textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.lp-preview {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  object-fit: contain;
+  background: white;
+}
+
+/* BOTÃO SALVAR */
+.lp-save {
+  width: 100%;
+  background: #007aff;
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
 }

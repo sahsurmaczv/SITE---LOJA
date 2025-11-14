@@ -1,18 +1,16 @@
 import React from "react";
+import AddProduct from "../components/AddProduct/AddProduct";
+import ListProduct from "../components/ListProduct/ListProduct";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./CSS/Admin.css";
-import Sidebar from "../Components/Sidebar/Sidebar";
-import AddProduct from "../Components/AddProduct/AddProduct";
-import ListProduct from "../Components/ListProduct/ListProduct";
-import { Route, Routes } from "react-router-dom";
 
 const Admin = () => {
   return (
-    <div className="admin">
-      <Sidebar />
+    <div className="container-center admin-content">
       <Routes>
-        <Route path="/" element={<AddProduct />} />
-        <Route path="/addproduct" element={<AddProduct />} />
-        <Route path="/listproduct" element={<ListProduct />} />
+        <Route path="/" element={<Navigate to="addproduct" replace />} />
+        <Route path="addproduct" element={<AddProduct />} />
+        <Route path="listproduct" element={<ListProduct />} />
       </Routes>
     </div>
   );

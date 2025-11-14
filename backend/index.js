@@ -1,6 +1,6 @@
-// ========================
+// ===============================================
 // 📦 IMPORTAÇÕES
-// ========================
+// ===============================================
 const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -14,92 +14,74 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 4000;
 
-// ========================
-// 🧩 MIDDLEWARES
-// ========================
 app.use(express.json());
 
-// 🔐 CORS com múltiplas origens (frontend e admin)
-const allowedOrigins = [
-  "http://localhost:3000",  // old CRA frontend
-  "http://localhost:3001",  // old CRA admin
-  "http://localhost:5173",  // Vite admin
-  "http://localhost:5174",  // Vite frontend
-];
-
-
+// ===============================================
+// 🌐 CORS — PERMITIR FRONT + ADMIN
+// ===============================================
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS bloqueado para essa origem: " + origin));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "auth-token"],
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
   })
 );
 
-// ========================
-// 🗄️ CONEXÃO COM O BANCO
-// ========================
+// ===============================================
+// 🗄️ CONEXÃO COM O MONGO
+// ===============================================
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Conectado ao MongoDB"))
-  .catch((err) => console.error("❌ Erro ao conectar ao MongoDB:", err));
+  .catch((err) => console.error("❌ Erro MongoDB:", err));
 
-// ========================
-// 🖼️ UPLOAD DE IMAGENS
-// ========================
-const uploadDir = path.join(__dirname, "upload/images");
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+// ===============================================
+// 📁 PASTA UPLOAD
+// ===============================================
+const uploadFolder = path.join(__dirname, "upload/images");
+if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
 
-app.use("/images", express.static(uploadDir));
+app.use("/images", express.static(uploadFolder));
 
 const storage = multer.diskStorage({
-  destination: uploadDir,
+  destination: uploadFolder,
   filename: (req, file, cb) => {
-    const uniqueName = `${file.fieldname}_${Date.now()}${path.extname(
-      file.originalname
-    )}`;
-    cb(null, uniqueName);
+    const name = `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`;
+    cb(null, name);
   },
 });
+const upload = multer({ storage });
 
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const allowed = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-    if (!allowed.includes(file.mimetype)) {
-      return cb(new Error("Tipo de arquivo não permitido"));
-    }
-    cb(null, true);
-  },
+// ===============================================
+// 📌 MODELOS
+// ===============================================
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+  role: { type: String, default: "user" },
+  cartData: Object,
 });
 
-// 🔹 Upload de imagem
-app.post("/upload", upload.single("product"), (req, res) => {
-  if (!req.file)
-    return res
-      .status(400)
-      .json({ success: false, message: "Nenhum arquivo enviado" });
-
-  res.json({
-    success: true,
-    image_url: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-  });
+const productSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+  description: String,
+  image: String,
+  category: String,
+  new_price: Number,
+  available: { type: Boolean, default: true },
+  date: { type: Date, default: Date.now },
 });
 
-// ========================
-// 🔐 AUTENTICAÇÃO
-// ========================
+const Users = mongoose.model("Users", userSchema);
+const Product = mongoose.model("Product", productSchema);
+
+// ===============================================
+// 🔐 MIDDLEWARES auth
+// ===============================================
 const fetchUser = (req, res, next) => {
   const token = req.header("auth-token");
-  if (!token)
-    return res.status(401).json({ success: false, message: "Token ausente" });
+  if (!token) return res.status(401).json({ success: false, message: "Token ausente" });
 
   try {
     const data = jwt.verify(token, process.env.JWT_SECRET);
@@ -110,236 +92,188 @@ const fetchUser = (req, res, next) => {
   }
 };
 
-// Middleware admin
 const isAdmin = async (req, res, next) => {
-  try {
-    const user = await Users.findById(req.user.id);
-    if (user?.role === "admin") next();
-    else
-      res
-        .status(403)
-        .json({ success: false, message: "Acesso negado. Somente administradores." });
-  } catch {
-    res.status(500).json({ success: false, message: "Erro ao verificar permissões" });
-  }
+  const user = await Users.findById(req.user.id);
+  if (!user) return res.status(400).json({ success: false, message: "Usuário não existe" });
+  if (user.role !== "admin")
+    return res.status(403).json({ success: false, message: "Apenas administradores" });
+  next();
 };
 
-// ========================
-// 🧱 MODELOS
-// ========================
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  cartData: Object,
-  date: { type: Date, default: Date.now },
-  role: { type: String, default: "user" },
-});
-
-const productSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
-  name: { type: String, required: true },
-  description: String,
-  image: String,
-  category: String,
-  new_price: Number,
-  old_price: Number,
-  date: { type: Date, default: Date.now },
-  available: { type: Boolean, default: true },
-});
-
-const Users = mongoose.model("Users", userSchema);
-const Product = mongoose.model("Product", productSchema);
-
-// ========================
-// 🚀 ROTAS
-// ========================
-
-// 🌐 Teste
-app.get("/", (req, res) => res.send("Servidor funcionando 🚀"));
-
-// ------------------------
-// 🧍 CADASTRO E LOGIN
-// ------------------------
+// ===============================================
+// 👤 SIGNUP / LOGIN USUÁRIO
+// ===============================================
 app.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
     if (!username || !email || !password)
-      return res
-        .status(400)
-        .json({ success: false, message: "Campos obrigatórios ausentes" });
+      return res.json({ success: false, message: "Preencha todos os campos" });
 
-    const existingUser = await Users.findOne({ email });
-    if (existingUser)
-      return res
-        .status(400)
-        .json({ success: false, message: "Email já cadastrado" });
+    if (await Users.findOne({ email }))
+      return res.json({ success: false, message: "Email já cadastrado" });
 
     const hashed = await bcrypt.hash(password, 10);
-    const cart = {};
-    for (let i = 0; i < 300; i++) cart[i] = 0;
 
-    const user = new Users({ name: username, email, password: hashed, cartData: cart });
+    const cart = {};
+    for (let i = 1; i <= 500; i++) cart[i] = 0;
+
+    const user = new Users({
+      name: username,
+      email,
+      password: hashed,
+      cartData: cart,
+    });
+
     await user.save();
 
-    const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET);
     res.json({ success: true, token });
-  } catch (err) {
-    console.error("Erro no signup:", err);
-    res.status(500).json({ success: false, message: "Erro interno do servidor" });
+  } catch {
+    res.json({ success: false, message: "Erro interno" });
   }
 });
 
 app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await Users.findOne({ email });
-    if (!user)
-      return res.status(400).json({ success: false, message: "Email não cadastrado" });
+  const { email, password } = req.body;
 
-    const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass)
-      return res.status(400).json({ success: false, message: "Senha incorreta" });
+  const user = await Users.findOne({ email });
+  if (!user) return res.json({ success: false, message: "Email não encontrado" });
 
-    const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-    res.json({ success: true, token, role: user.role });
-  } catch (err) {
-    console.error("Erro no login:", err);
-    res.status(500).json({ success: false, message: "Erro interno do servidor" });
-  }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.json({ success: false, message: "Senha incorreta" });
+
+  const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET);
+  res.json({ success: true, token, role: user.role });
 });
 
+// ===============================================
+// 👑 LOGIN ADMIN
+// ===============================================
 app.post("/adminlogin", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await Users.findOne({ email });
+  const { email, password } = req.body;
 
-    if (!user)
-      return res.status(400).json({ success: false, message: "Email não encontrado" });
+  const user = await Users.findOne({ email });
+  if (!user) return res.json({ success: false, message: "Email não encontrado" });
+  if (user.role !== "admin")
+    return res.json({ success: false, message: "Apenas administradores" });
 
-    const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass)
-      return res.status(400).json({ success: false, message: "Senha incorreta" });
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.json({ success: false, message: "Senha incorreta" });
 
-    if (user.role !== "admin")
-      return res.status(403).json({ success: false, message: "Acesso negado — não é administrador." });
-
-    const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.json({ success: true, token, role: user.role });
-  } catch (err) {
-    console.error("Erro no adminlogin:", err);
-    res.status(500).json({ success: false, message: "Erro interno do servidor" });
-  }
+  const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET);
+  res.json({ success: true, token });
 });
 
-// ------------------------
-// 🧩 ADMIN: PRODUTOS
-// ------------------------
+// ===============================================
+// 🖼️ UPLOAD DE IMAGEM
+// ===============================================
+app.post("/upload", upload.single("product"), (req, res) => {
+  if (!req.file) return res.json({ success: false, message: "Nenhum arquivo enviado" });
+
+  const url = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+  res.json({ success: true, image_url: url });
+});
+
+// ===============================================
+// 📦 PRODUTOS — ADMIN
+// ===============================================
 app.post("/addproduct", fetchUser, isAdmin, async (req, res) => {
   try {
-    const { name, description, image, category, new_price, old_price } = req.body;
-    const lastProduct = await Product.findOne().sort({ id: -1 });
-    const nextId = lastProduct ? lastProduct.id + 1 : 1;
+    const { name, description, image, category, new_price } = req.body;
 
-    const newProduct = new Product({
+    if (!name || !category)
+      return res.json({ success: false, message: "Nome e categoria obrigatórios!" });
+
+    const last = await Product.findOne().sort({ id: -1 });
+    const nextId = last ? last.id + 1 : 1;
+
+    const product = new Product({
       id: nextId,
       name,
       description,
       image,
       category,
       new_price,
-      old_price,
     });
 
-    await newProduct.save();
-    res.json({ success: true, message: "Produto adicionado com sucesso!" });
-  } catch (error) {
-    console.error("Erro em /addproduct:", error);
-    res.status(500).json({ success: false, message: "Erro ao adicionar produto." });
-  }
-});
+    await product.save();
 
-app.post("/removeproduct", fetchUser, isAdmin, async (req, res) => {
-  try {
-    const { id } = req.body;
-    const deleted = await Product.findOneAndDelete({ id });
-    if (!deleted)
-      return res.status(404).json({ success: false, message: "Produto não encontrado." });
-    res.json({ success: true, message: "Produto removido com sucesso!" });
-  } catch (error) {
-    console.error("Erro em /removeproduct:", error);
-    res.status(500).json({ success: false, message: "Erro ao remover produto." });
+    res.json({ success: true, message: "Produto adicionado!" });
+  } catch (err) {
+    console.log(err);
+    res.json({ success: false, message: "Erro ao adicionar produto" });
   }
 });
 
 app.put("/editproduct", fetchUser, isAdmin, async (req, res) => {
   try {
-    const { id, name, description, image, category, new_price, old_price } = req.body;
-    const product = await Product.findOneAndUpdate(
-      { id },
-      { name, description, image, category, new_price, old_price },
+    const updated = await Product.findOneAndUpdate(
+      { id: req.body.id },
+      req.body,
       { new: true }
     );
-    if (!product)
-      return res.status(404).json({ success: false, message: "Produto não encontrado." });
-    res.json({ success: true, message: "Produto atualizado com sucesso!" });
-  } catch (error) {
-    console.error("Erro em /editproduct:", error);
-    res.status(500).json({ success: false, message: "Erro ao editar produto." });
+
+    if (!updated)
+      return res.json({ success: false, message: "Produto não encontrado" });
+
+    res.json({ success: true, message: "Produto atualizado!" });
+  } catch (err) {
+    res.json({ success: false, message: "Erro ao atualizar" });
   }
 });
 
-// ------------------------
-// 🛍️ PRODUTOS PARA CLIENTE
-// ------------------------
+app.post("/removeproduct", fetchUser, isAdmin, async (req, res) => {
+  try {
+    const removed = await Product.findOneAndDelete({ id: req.body.id });
+
+    if (!removed)
+      return res.json({ success: false, message: "Produto não existe" });
+
+    res.json({ success: true, message: "Produto removido!" });
+  } catch {
+    res.json({ success: false, message: "Erro ao remover" });
+  }
+});
+
+// ===============================================
+// 🛍️ PRODUTOS — CLIENTE
+// ===============================================
 app.get("/allproducts", async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  res.json(await Product.find({ available: true }));
 });
 
-app.get("/newcollections", async (req, res) => {
-  try {
-    const products = await Product.find({});
-    res.json(products.slice(-8));
-  } catch {
-    res.status(500).json({ success: false, message: "Erro ao buscar coleções novas" });
-  }
-});
-
-app.get("/popularinwomen", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "women" });
-    res.json(products.slice(0, 4));
-  } catch {
-    res.status(500).json({ success: false, message: "Erro ao buscar populares" });
-  }
-});
-
-// ------------------------
-// 🛒 CARRINHO
-// ------------------------
+// ===============================================
+// 🛒 CARRINHO — GET / ADD / REMOVE
+// ===============================================
 app.post("/getcart", fetchUser, async (req, res) => {
-  try {
-    const user = await Users.findById(req.user.id);
-    if (!user)
-      return res.status(404).json({ success: false, message: "Usuário não encontrado" });
-    res.json(user.cartData);
-  } catch (error) {
-    console.error("Erro em /getcart:", error);
-    res.status(500).json({ success: false, message: "Erro ao buscar carrinho" });
-  }
+  const user = await Users.findById(req.user.id);
+  if (!user) return res.json({});
+  res.json(user.cartData);
 });
 
-// ========================
+app.post("/addtocart", fetchUser, async (req, res) => {
+  const { itemId } = req.body;
+
+  const user = await Users.findById(req.user.id);
+  user.cartData[itemId] = (user.cartData[itemId] || 0) + 1;
+
+  await user.save();
+  res.json({ success: true });
+});
+
+app.post("/removefromcart", fetchUser, async (req, res) => {
+  const { itemId } = req.body;
+
+  const user = await Users.findById(req.user.id);
+  user.cartData[itemId] = Math.max((user.cartData[itemId] || 0) - 1, 0);
+
+  await user.save();
+  res.json({ success: true });
+});
+
+// ===============================================
 // 🚀 INICIAR SERVIDOR
-// ========================
+// ===============================================
 app.listen(port, () =>
   console.log(`🔥 Servidor rodando na porta ${port}`)
 );
