@@ -86,6 +86,8 @@ const CartItems = () => {
           return (
             <div key={product.id}>
               <div className="cartitems-format-main cartitems-format">
+
+                {/* IMG */}
                 <img
                   className="cartitems-product-icon"
                   src={getImageUrl(product.image)}
