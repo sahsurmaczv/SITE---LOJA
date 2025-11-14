@@ -5,6 +5,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.main-content {
+  margin-top: 70px; /* ajuste conforme altura real da navbar */
+}
+
+
 a {
   text-decoration: none !important;
   color: inherit;
@@ -13,4 +18,60 @@ a {
 body {
   background-color: #fff;
   color: #222;
+}
+
+.shop-layout {
+  display: flex;
+}
+
+.sidebar-desktop {
+  display: none;
+}
+
+.shop-content {
+  flex: 1;
+  padding-left: 0;
+}
+
+@media (min-width: 992px) {
+  .sidebar-desktop {
+    display: block;
+    width: 260px;
+  }
+
+  .shop-content {
+    padding-left: 260px;
+  }
+}
+
+/* SIDEBAR MOBILE */
+.sidebar-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 998;
+}
+.shop-layout {
+  display: flex;
+}
+
+.shop-content {
+  margin-left: 260px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .shop-content {
+    margin-left: 0;
+  }
 }
