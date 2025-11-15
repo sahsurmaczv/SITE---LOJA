@@ -1,4 +1,3 @@
-/* NAVBAR CONTAINER */
 .nav-container {
   position: fixed;
   top: 0;
@@ -7,10 +6,9 @@
   z-index: 2000;
 }
 
-/* NAV MAIN */
 .nav {
   height: 60px;
-  background: #0c0c0c; 
+  background: #0c0c0c;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,7 +17,6 @@
   gap: 25px;
 }
 
-/* LOGO */
 .nav-logo {
   display: flex;
   align-items: center;
@@ -39,7 +36,6 @@
   font-weight: 500;
 }
 
-/* BOTÃO CATEGORIAS (MINIMALISTA APPLE) */
 .btn-sidebar {
   background: transparent;
   border: 1px solid #2a2a2a;
@@ -60,12 +56,13 @@
   color: #fff;
 }
 
-.btn-sidebar .icon {
-  font-size: 15px;
-  opacity: 0.8;
+.icon-menu {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: brightness(200%);
 }
 
-/* LINKS */
 .nav-links {
   display: flex;
   gap: 26px;
@@ -83,14 +80,12 @@
   color: #007aff;
 }
 
-/* AÇÕES (login + carrinho) */
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-/* LOGIN */
 .login-btn {
   background: transparent;
   border: 1px solid #2a2a2a;
@@ -105,7 +100,6 @@
   border-color: #007aff;
 }
 
-/* CARRINHO */
 .cart-wrapper {
   position: relative;
 }
@@ -126,17 +120,21 @@
   font-size: 12px;
 }
 
-/* BOTÃO MENU MOBILE */
 .mobile-menu-btn {
   display: none;
-  color: white;
   background: transparent;
   border: none;
-  font-size: 24px;
+  cursor: pointer;
 }
 
-/* MOBILE */
+.icon-menu-mobile {
+  width: 26px;
+  height: 26px;
+  filter: brightness(200%);
+}
+
 @media (max-width: 900px) {
+
   .nav-links {
     display: none;
   }

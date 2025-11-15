@@ -1,21 +1,21 @@
 .productpage {
   max-width: 1200px;
-  margin: 40px auto 40px;
+  margin: 20px auto 40px; 
   padding: 0 20px;
 }
 
-/* Botão de voltar */
 .back-btn-product {
-  background: none;
-  border: 2px solid #007aff;
-  padding: 8px 14px;
+  background: #f3f3f3;
+  border: 1px solid #007aff;
+  padding: 8px 16px;
   border-radius: 10px;
-  font-size: 15px;
-  margin-bottom: 25px;
   cursor: pointer;
-  transition: 0.25s ease;
-  color: #007aff;
+  font-size: 14px;
   font-weight: 600;
+  color: #007aff;
+  transition: 0.25s ease;
+  margin-bottom: 20px;
+  margin-top: -10px; 
 }
 
 .back-btn-product:hover {

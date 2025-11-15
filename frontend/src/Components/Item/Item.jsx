@@ -6,8 +6,8 @@ import { backend_url, currency } from '../../App'
 const Item = (props) => {
   return (
     <div className='item'>
-      <Link 
-        to={`/product/${props.id}`} 
+      <Link
+        to={`/product/${props.id}`}
         state={{ from: window.location.pathname }}
       >
         <img
@@ -20,9 +20,7 @@ const Item = (props) => {
           alt={props.name}
         />
       </Link>
-
       <p>{props.name}</p>
-
       <div className="item-prices">
         <div className="item-price-new">
           {currency}{Number(props.new_price).toFixed(2)}

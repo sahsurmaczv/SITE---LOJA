@@ -3,19 +3,11 @@ import { backend_url } from "../App";
 import { useToast } from "../Components/Toast/ToastProvider";
 
 export const ShopContext = createContext(null);
-
 const ShopContextProvider = (props) => {
-
-  const { showToast } = useToast(); // ✅ AGORA ESTÁ DENTRO DO COMPONENTE
-
+  const { showToast } = useToast();
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [loadingCart, setLoadingCart] = useState(true);
-
-
-  // -----------------------------
-  // 1) Carrega produtos
-  // -----------------------------
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -26,20 +18,14 @@ const ShopContextProvider = (props) => {
         console.error("Erro ao carregar produtos:", err);
       }
     };
-
     loadProducts();
   }, []);
-
-  // -----------------------------
-  // 2) Carrega carrinho APÓS produtos
-  // -----------------------------
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
     if (!token) {
       setLoadingCart(false);
       return;
     }
-
     const loadCart = async () => {
       try {
         const res = await fetch(`${backend_url}/getcart`, {
@@ -49,7 +35,6 @@ const ShopContextProvider = (props) => {
             "auth-token": token,
           },
         });
-
         const data = await res.json();
         if (data && typeof data === "object") {
           setCartItems(data);
@@ -60,39 +45,28 @@ const ShopContextProvider = (props) => {
         setLoadingCart(false);
       }
     };
-
     loadCart();
-  }, [products]); // ← garante ordem correta!
-
-  // -----------------------------
-  // Funções do carrinho
-  // -----------------------------
+  }, [products]);
   const addToCart = async (itemId) => {
-  const token = localStorage.getItem("auth-token");
-
-  if (!token) {
-    showToast("Faça login para adicionar um produto ao carrinho");
-    return;
-  }
-
-  setCartItems((prev) => ({
-    ...prev,
-    [itemId]: (prev[itemId] || 0) + 1,
-  }));
-
-  showToast("Produto adicionado ao carrinho!");
-
-  await fetch(`${backend_url}/addtocart`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "auth-token": token,
-    },
-    body: JSON.stringify({ itemId }),
-  });
-};
-
-
+    const token = localStorage.getItem("auth-token");
+    if (!token) {
+      showToast("Faça login para adicionar ao carrinho");
+      return;
+    }
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: (prev[itemId] || 0) + 1,
+    }));
+    showToast("Produto adicionado ao carrinho!");
+    await fetch(`${backend_url}/addtocart`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": token,
+      },
+      body: JSON.stringify({ itemId }),
+    });
+  };
   const removeFromCart = async (itemId) => {
     const token = localStorage.getItem("auth-token");
 
@@ -100,7 +74,6 @@ const ShopContextProvider = (props) => {
       ...prev,
       [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
     }));
-
     if (token) {
       await fetch(`${backend_url}/removefromcart`, {
         method: "POST",
@@ -112,13 +85,10 @@ const ShopContextProvider = (props) => {
       });
     }
   };
-
   const clearCart = async () => {
     const token = localStorage.getItem("auth-token");
     if (!token) return;
-
     setCartItems({});
-
     await fetch(`${backend_url}/clearcart`, {
       method: "POST",
       headers: {
@@ -127,13 +97,8 @@ const ShopContextProvider = (props) => {
       },
     });
   };
-
-  // -----------------------------
-  // Totais
-  // -----------------------------
   const getTotalCartAmount = () => {
     let total = 0;
-
     for (const id in cartItems) {
       const quantity = cartItems[id];
       if (quantity > 0) {
@@ -141,17 +106,11 @@ const ShopContextProvider = (props) => {
         if (product) total += product.new_price * quantity;
       }
     }
-
     return total;
   };
-
   const getTotalCartItems = () => {
     return Object.values(cartItems).reduce((a, b) => a + b, 0);
   };
-
-  // -----------------------------
-  // Contexto final
-  // -----------------------------
   const contextValue = {
     products,
     cartItems,
@@ -162,7 +121,6 @@ const ShopContextProvider = (props) => {
     getTotalCartItems,
     loadingCart,
   };
-
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}

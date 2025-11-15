@@ -1,23 +1,19 @@
-// frontend/src/Pages/LoginSignup.jsx
 import React, { useState } from "react";
-import "./CSS/LoginSignup.css";
-import { backend_url } from "../App";
-import { useToast } from "../Components/Toast/ToastProvider";
+import "./LoginSignup.css";
+import { backend_url } from "../../App";
+import { useToast } from "../../Components/Toast/ToastProvider";
 
 const LoginSignup = () => {
   const { showToast } = useToast();
-
   const [state, setState] = useState("Login");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
-
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const login = async () => {
     try {
       const resp = await fetch(`${backend_url}/login`, {
@@ -31,17 +27,12 @@ const LoginSignup = () => {
           password: formData.password,
         }),
       });
-
       const dataObj = await resp.json();
-
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
-
         showToast("Login realizado com sucesso!", "success");
 
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 900);
+        setTimeout(() => (window.location.href = "/"), 900);
       } else {
         showToast(dataObj.message || "Erro no login", "error");
       }
@@ -50,7 +41,6 @@ const LoginSignup = () => {
       showToast("Erro ao conectar ao servidor", "error");
     }
   };
-
   const signup = async () => {
     try {
       const resp = await fetch(`${backend_url}/signup`, {
@@ -65,16 +55,12 @@ const LoginSignup = () => {
           password: formData.password,
         }),
       });
-
       const dataObj = await resp.json();
-
       if (dataObj.success) {
         showToast("Conta criada com sucesso!", "success");
         localStorage.setItem("auth-token", dataObj.token);
 
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 900);
+        setTimeout(() => (window.location.href = "/"), 900);
       } else {
         showToast(dataObj.message || "Erro no cadastro", "error");
       }
@@ -83,44 +69,38 @@ const LoginSignup = () => {
       showToast("Erro ao conectar ao servidor", "error");
     }
   };
-
   return (
     <div className="loginsignup">
       <div className="loginsignup-container">
         <h1>{state}</h1>
-
         <div className="loginsignup-fields">
           {state === "Sign Up" && (
             <input
               type="text"
-              placeholder="Your name"
+              placeholder="Seu nome"
               name="username"
               value={formData.username}
               onChange={changeHandler}
             />
           )}
-
           <input
             type="email"
-            placeholder="Email address"
+            placeholder="Email"
             name="email"
             value={formData.email}
             onChange={changeHandler}
           />
-
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Senha"
             name="password"
             value={formData.password}
             onChange={changeHandler}
           />
         </div>
-
         <button onClick={() => (state === "Login" ? login() : signup())}>
-          Continue
+          Continuar
         </button>
-
         {state === "Login" ? (
           <p className="loginsignup-login">
             Criar uma conta?{" "}

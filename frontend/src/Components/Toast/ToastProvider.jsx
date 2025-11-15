@@ -2,48 +2,43 @@ import React, { createContext, useContext, useState } from "react";
 import "./Toast.css";
 
 const ToastContext = createContext(null);
-
 export const useToast = () => useContext(ToastContext);
 
 export const ToastProvider = ({ children }) => {
   const [toast, setToast] = useState(null);
 
-  const showToast = (message, actions = null) => {
-    setToast({ message, actions });
+  const showToast = (message, type = "default", actions = []) => {
+    setToast({ message, type, actions });
 
-    setTimeout(() => {
-      if (!actions) setToast(null);
-    }, actions ? 8000 : 2500);
+    if (actions.length === 0) {
+      setTimeout(() => setToast(null), 3000);
+    }
   };
-
-  const closeToast = () => setToast(null);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
 
       {toast && (
-        <div className="toast-container">
-          <div className="toast-box">
-            <p>{toast.message}</p>
+        <div className={`toast toast-${toast.type}`}>
+          <p className="toast-message">{toast.message}</p>
 
-            {toast.actions && (
-              <div className="toast-actions">
-                {toast.actions.map((btn, i) => (
-                  <button
-                    key={i}
-                    className={`toast-btn ${btn.type}`}
-                    onClick={() => {
-                      btn.onClick();
-                      closeToast();
-                    }}
-                  >
-                    {btn.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {toast.actions.length > 0 && (
+            <div className="toast-actions">
+              {toast.actions.map((a, i) => (
+                <button
+                  key={i}
+                  className={`toast-btn ${a.type}`}
+                  onClick={() => {
+                    if (a.onClick) a.onClick();
+                    setToast(null);
+                  }}
+                >
+                  {a.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </ToastContext.Provider>

@@ -1,9 +1,6 @@
-/* ===========================
-   SIDEBAR BASE
-=========================== */
 .sidebar {
   position: fixed;
-  top: 60px; /* abaixo do navbar */
+  top: 60px;
   left: 0;
   width: 260px;
   height: calc(100vh - 60px);
@@ -12,21 +9,14 @@
   padding: 20px;
   overflow-y: auto;
   z-index: 1500;
-
-  /* Agora o sidebar começa FECHADO
-     em TODAS as telas */
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
 
-/* Quando isOpen=true, sidebar aparece */
 .sidebar.open {
   transform: translateX(0);
 }
 
-/* ===========================
-   OVERLAY (aparece quando sidebar abre)
-=========================== */
 .sidebar-overlay {
   position: fixed;
   top: 60px;
@@ -35,29 +25,19 @@
   height: calc(100vh - 60px);
   background: rgba(0, 0, 0, 0.55);
   z-index: 1400;
-  display: none; /* padrão: escondido */
 }
 
-/* Quando sidebar estiver aberto → mostrar overlay */
-.sidebar.open + .sidebar-overlay {
-  display: block;
-}
-
-/* ===========================
-   BOTÃO X SEMPRE VISÍVEL
-=========================== */
 .sidebar-close {
-  display: block;
   position: absolute;
+  top: 12px;
   right: 15px;
-  top: 10px;
-  font-size: 32px;
+  font-size: 34px;
   color: #fff;
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 2000;
   transition: 0.2s ease;
+  z-index: 2000;
 }
 
 .sidebar-close:hover {
@@ -65,13 +45,11 @@
   transform: scale(1.15);
 }
 
-/* ===========================
-   TITLES
-=========================== */
 .sidebar-title {
   color: #00aaff;
   font-size: 20px;
   margin-bottom: 15px;
+  margin-top: 18px;
   font-weight: 700;
 }
 
@@ -81,12 +59,8 @@
   margin-bottom: 8px;
   font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-/* ===========================
-   LINKS
-=========================== */
 .sidebar-section ul {
   list-style: none;
   padding-left: 10px;
@@ -106,4 +80,13 @@
 .sidebar-section a:hover {
   color: #00aaff;
   padding-left: 4px;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #00aaff;
+  border-radius: 10px;
 }

@@ -1,4 +1,3 @@
-/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -21,68 +20,13 @@ body {
   flex-direction: column;
 }
 
-/* CONTEÚDO PRINCIPAL (EMPURRA FOOTER PARA BAIXO) */
 .main-content {
-  flex: 1;         /* ESSENCIAL para o footer ficar no fim */
-  margin-top: 60px; /* valor EXATO da navbar */
+  flex: 1;
+  margin-top: 60px; 
   padding: 0;
 }
 
-/* LINKS */
 a {
   text-decoration: none !important;
   color: inherit;
-}
-
-/* LAYOUT GERAL */
-.shop-layout {
-  display: flex;
-}
-
-/* SIDEBAR DESKTOP */
-.sidebar-desktop {
-  display: none;
-}
-
-@media (min-width: 992px) {
-  .sidebar-desktop {
-    display: block;
-    width: 260px;
-  }
-
-  .shop-content {
-    padding-left: 260px;
-  }
-}
-
-/* SIDEBAR MOBILE */
-.sidebar-mobile {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
-}
-
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 998;
-}
-
-/* ÁREA PRINCIPAL SEM DUPLICAÇÕES */
-.shop-content {
-  width: 100%;
-  flex: 1;
-  padding-left: 0;
-}
-
-@media (max-width: 900px) {
-  .shop-content {
-    padding-left: 0;
-    margin-left: 0;
-  }
 }

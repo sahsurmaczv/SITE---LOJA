@@ -4,11 +4,10 @@
   align-items: flex-start;
   gap: 50px;
   padding: 20px 40px;
-  margin-top: 0; /* <-- removemos o espaço extra */
+  margin-top: 20px;
 }
 
-
-/* LEFT SIDE */
+/* LEFT */
 .pd-left {
   flex: 1;
   display: flex;
@@ -20,11 +19,10 @@
   max-width: 550px;
   border-radius: 20px;
   object-fit: cover;
-
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-/* RIGHT SIDE */
+/* RIGHT */
 .pd-right {
   flex: 1;
   display: flex;
@@ -36,12 +34,13 @@
   font-size: 42px;
   font-weight: 700;
   margin-bottom: 10px;
+  color: #111;
 }
 
 .pd-price {
   font-size: 28px;
   font-weight: bold;
-  color: #007bff;
+  color: #007aff;
   margin-bottom: 20px;
 }
 
@@ -53,21 +52,20 @@
 }
 
 .pd-btn {
-  background: #007bff;
+  background: #007aff;
   color: white;
   border: none;
-  padding: 12px 18px;   /* diminuiu */
-  font-size: 16px;      /* diminuiu */
+  padding: 12px 18px;
+  font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
   margin-bottom: 20px;
-  width: 300px;         /* tamanho fixo menor */
+  width: 300px;
 }
 
-
 .pd-btn:hover {
-  background: #005fcc;
+  background: #0063cc;
 }
 
 .pd-category {
@@ -77,10 +75,10 @@
 
 .pd-category span {
   font-weight: bold;
-  color: #007bff;
+  color: #007aff;
 }
 
-/* 🔥 Responsivo */
+/* Responsivo */
 @media (max-width: 900px) {
   .pd-container {
     flex-direction: column;
