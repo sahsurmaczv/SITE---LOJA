@@ -136,3 +136,31 @@
   background: #d62d23;
   transform: translateY(-2px);
 }
+/* BOTÃO VOLTAR NA PÁGINA DO CARRINHO */
+.cart-back-btn {
+  background: #f3f3f3;
+  border: 1px solid #dcdcdc;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #007aff;
+  transition: 0.25s ease;
+  margin-bottom: 20px;
+  margin-top: -20px; /* aproxima da navbar */
+}
+
+.cart-back-btn:hover {
+  background: #e6e6e6;
+  transform: translateX(-3px);
+}
+.cartitems-remove-icon {
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.cartitems-remove-icon:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}

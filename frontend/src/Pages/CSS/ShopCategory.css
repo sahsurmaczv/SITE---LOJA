@@ -1,38 +1,36 @@
-/* Página */
 .category-page {
   max-width: 1200px;
-  margin: 100px auto 40px;
+  margin: 40px auto;
   padding: 0 20px;
 }
 
-/* Cabeçalho */
 .category-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Botão Voltar */
 .back-btn {
   background: #f3f3f3;
-  border: 1px solid #ddd;
-  padding: 8px 16px;
+  border: 1px solid #007aff;
+  padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.2s ease;
   font-size: 14px;
+  font-weight: 600;
+  color: #007aff;
 }
 
 .back-btn:hover {
-  background: #e6e6e6;
+  background: #007aff;
+  color: white;
 }
 
-/* Wrapper da busca (para o botão X ficar dentro) */
 .search-wrapper {
   position: relative;
 }
 
-/* Campo de busca */
 .search-input {
   width: 260px;
   padding: 8px 12px;
@@ -42,12 +40,6 @@
   font-size: 14px;
 }
 
-.search-input:focus {
-  border-color: #007aff;
-  outline: none;
-}
-
-/* Botão limpar busca */
 .clear-search {
   position: absolute;
   right: 12px;
@@ -60,11 +52,6 @@
   opacity: 0.6;
 }
 
-.clear-search:hover {
-  opacity: 1;
-}
-
-/* Título */
 .category-title {
   font-size: 32px;
   font-weight: 700;
@@ -73,7 +60,6 @@
   text-align: left;
 }
 
-/* Grid de produtos */
 .category-products-container {
   margin-top: 10px;
   display: grid;
@@ -81,7 +67,6 @@
   gap: 25px;
 }
 
-/* Cartão */
 .category-product-card {
   background: #fff;
   border-radius: 14px;
@@ -96,18 +81,28 @@
   border-color: #007aff;
 }
 
-
-.category-product-card img {
+.product-img-wrapper {
   width: 100%;
-  height: 180px;
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px;
+  border: 1px solid #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-img-wrapper img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  margin-bottom: 10px;
 }
 
 .product-name {
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-top: 8px;
 }
 
 .product-price {
@@ -120,24 +115,4 @@
   font-size: 18px;
   opacity: 0.8;
   text-align: center;
-}
-/* Wrapper que mantém proporção uniforme */
-.product-img-wrapper {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: #fff;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-  overflow: hidden;
-  border: 1px solid #e6e6e6;
-}
-
-/* A imagem se adapta ao espaço */
-.product-img-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }

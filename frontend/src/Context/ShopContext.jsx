@@ -1,12 +1,17 @@
 import React, { createContext, useEffect, useState } from "react";
 import { backend_url } from "../App";
+import { useToast } from "../Components/Toast/ToastProvider";
 
 export const ShopContext = createContext(null);
 
 const ShopContextProvider = (props) => {
+
+  const { showToast } = useToast(); // ✅ AGORA ESTÁ DENTRO DO COMPONENTE
+
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [loadingCart, setLoadingCart] = useState(true);
+
 
   // -----------------------------
   // 1) Carrega produtos
@@ -63,26 +68,30 @@ const ShopContextProvider = (props) => {
   // Funções do carrinho
   // -----------------------------
   const addToCart = async (itemId) => {
-    const token = localStorage.getItem("auth-token");
-    if (!token) {
-      alert("Faça login para adicionar itens ao carrinho.");
-      return;
-    }
+  const token = localStorage.getItem("auth-token");
 
-    setCartItems((prev) => ({
-      ...prev,
-      [itemId]: (prev[itemId] || 0) + 1,
-    }));
+  if (!token) {
+    showToast("Faça login para adicionar um produto ao carrinho");
+    return;
+  }
 
-    await fetch(`${backend_url}/addtocart`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": token,
-      },
-      body: JSON.stringify({ itemId }),
-    });
-  };
+  setCartItems((prev) => ({
+    ...prev,
+    [itemId]: (prev[itemId] || 0) + 1,
+  }));
+
+  showToast("Produto adicionado ao carrinho!");
+
+  await fetch(`${backend_url}/addtocart`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "auth-token": token,
+    },
+    body: JSON.stringify({ itemId }),
+  });
+};
+
 
   const removeFromCart = async (itemId) => {
     const token = localStorage.getItem("auth-token");

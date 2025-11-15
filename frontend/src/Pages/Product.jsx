@@ -1,14 +1,15 @@
 // src/Pages/Product.jsx
 import React, { useContext, useEffect, useState } from "react";
-import ProductDisplay from '../Components/ProductDisplay/ProductDisplay';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ShopContext } from '../Context/ShopContext';
+import ProductDisplay from "../Components/ProductDisplay/ProductDisplay";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { ShopContext } from "../Context/ShopContext";
 import "./CSS/ProductPage.css";
 
 const Product = () => {
   const { products } = useContext(ShopContext);
   const { productId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [product, setProduct] = useState(null);
 
@@ -16,13 +17,22 @@ const Product = () => {
     setProduct(products.find((e) => e.id === Number(productId)));
   }, [products, productId]);
 
-  if (!product) return <p style={{ marginTop: "120px", textAlign: "center" }}>Carregando...</p>;
+  const handleBack = () => {
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else {
+      navigate("/");
+    }
+  };
+
+  if (!product)
+    return (
+      <p style={{ marginTop: "120px", textAlign: "center" }}>Carregando...</p>
+    );
 
   return (
     <div className="productpage">
-
-      {/* 🔙 Botão de voltar */}
-      <button className="back-btn-product" onClick={() => navigate(-1)}>
+      <button className="back-btn-product" onClick={handleBack}>
         ⬅ Voltar
       </button>
 

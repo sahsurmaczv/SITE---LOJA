@@ -2,10 +2,17 @@
 import React, { useState } from "react";
 import "./CSS/LoginSignup.css";
 import { backend_url } from "../App";
+import { useToast } from "../Components/Toast/ToastProvider";
 
 const LoginSignup = () => {
+  const { showToast } = useToast();
+
   const [state, setState] = useState("Login");
-  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,21 +26,28 @@ const LoginSignup = () => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: formData.email, password: formData.password }),
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
+
       const dataObj = await resp.json();
+
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
 
-// força ShopContext a recarregar o carrinho
-window.location.reload();
+        showToast("Login realizado com sucesso!", "success");
 
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 900);
       } else {
-        alert(dataObj.message || dataObj.error || "Erro no login");
+        showToast(dataObj.message || "Erro no login", "error");
       }
     } catch (err) {
       console.error("Erro login:", err);
-      alert("Erro de conexão ao realizar login");
+      showToast("Erro ao conectar ao servidor", "error");
     }
   };
 
@@ -45,18 +59,28 @@ window.location.reload();
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: formData.username, email: formData.email, password: formData.password }),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
+
       const dataObj = await resp.json();
+
       if (dataObj.success) {
+        showToast("Conta criada com sucesso!", "success");
         localStorage.setItem("auth-token", dataObj.token);
-        window.location.replace("/");
+
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 900);
       } else {
-        alert(dataObj.message || dataObj.error || "Erro no cadastro");
+        showToast(dataObj.message || "Erro no cadastro", "error");
       }
     } catch (err) {
       console.error("Erro signup:", err);
-      alert("Erro de conexão ao realizar cadastro");
+      showToast("Erro ao conectar ao servidor", "error");
     }
   };
 
@@ -64,24 +88,50 @@ window.location.reload();
     <div className="loginsignup">
       <div className="loginsignup-container">
         <h1>{state}</h1>
+
         <div className="loginsignup-fields">
-          {state === "Sign Up" ? <input type="text" placeholder="Your name" name="username" value={formData.username} onChange={changeHandler} /> : null}
-          <input type="email" placeholder="Email address" name="email" value={formData.email} onChange={changeHandler} />
-          <input type="password" placeholder="Password" name="password" value={formData.password} onChange={changeHandler} />
+          {state === "Sign Up" && (
+            <input
+              type="text"
+              placeholder="Your name"
+              name="username"
+              value={formData.username}
+              onChange={changeHandler}
+            />
+          )}
+
+          <input
+            type="email"
+            placeholder="Email address"
+            name="email"
+            value={formData.email}
+            onChange={changeHandler}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={changeHandler}
+          />
         </div>
 
-        <button onClick={() => { state === "Login" ? login() : signup() }}>Continue</button>
+        <button onClick={() => (state === "Login" ? login() : signup())}>
+          Continue
+        </button>
 
         {state === "Login" ? (
-          <p className="loginsignup-login">Create an account? <span onClick={() => { setState("Sign Up") }}>Click here</span></p>
+          <p className="loginsignup-login">
+            Criar uma conta?{" "}
+            <span onClick={() => setState("Sign Up")}>Clique aqui</span>
+          </p>
         ) : (
-          <p className="loginsignup-login">Already have an account? <span onClick={() => { setState("Login") }}>Login here</span></p>
+          <p className="loginsignup-login">
+            Já tem uma conta?{" "}
+            <span onClick={() => setState("Login")}>Faça login aqui</span>
+          </p>
         )}
-
-        <div className="loginsignup-agree">
-          <input type="checkbox" name="" id="" />
-          <p>By continuing, i agree to the terms of use & privacy policy.</p>
-        </div>
       </div>
     </div>
   );

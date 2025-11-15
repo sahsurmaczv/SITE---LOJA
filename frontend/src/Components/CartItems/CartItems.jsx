@@ -3,8 +3,12 @@ import "./CartItems.css";
 import { ShopContext } from "../../Context/ShopContext";
 import { backend_url, currency } from "../../App";
 import cross_icon from "../Assets/logo.png";
+import { useToast } from "../Toast/ToastProvider";
 
 const CartItems = () => {
+
+  const { showToast } = useToast();  // ✅ AQUI É O LUGAR CERTO
+
   const { 
     products, 
     cartItems, 
@@ -13,6 +17,7 @@ const CartItems = () => {
     clearCart, 
     getTotalCartAmount 
   } = useContext(ShopContext);
+
 
   const [loaded, setLoaded] = useState(false);
 
@@ -36,20 +41,24 @@ const CartItems = () => {
   const phoneNumber = "5542998275219";
 
   const buildWhatsAppMessage = () => {
-    let msg = "Olá! Gostaria de solicitar os seguintes produtos:%0A%0A";
+  let msg = "*Pedido via Site Neri Informática* %0A";
+  msg += "%0A*Produtos escolhidos:*%0A";
 
-    products.forEach((product) => {
-      const q = cartItems[product.id];
-      if (q > 0) {
-        msg += `• ${product.name} (${q}x) - ${currency}${(
-          product.new_price * q
-        ).toFixed(2)}%0A`;
-      }
-    });
+  products.forEach((product) => {
+    const q = cartItems[product.id];
+    if (q > 0) {
+      msg += `• ${product.name} — ${q}x — R$ ${(product.new_price * q).toFixed(2)}%0A`;
+    }
+  });
 
-    msg += `%0A💰 Total da compra: *${currency}${totalAmount.toFixed(2)}*`;
-    return msg;
-  };
+  msg += "%0A----------------------------%0A";
+  msg += `*Total:* R$ ${totalAmount.toFixed(2)}%0A`;
+  msg += "----------------------------%0A";
+  msg += "%0A*Aguardando sua confirmação!*";
+
+  return msg;
+};
+
 
   const sendWhatsAppOrder = () => {
     if (!hasItems) return alert("Seu carrinho está vazio 🛒");
@@ -63,6 +72,10 @@ const CartItems = () => {
 
   return (
     <div className="cartitems fade-in">
+      <button className="cart-back-btn" onClick={() => window.history.back()}>
+  ⬅ Voltar
+</button>
+
       <div className="cartitems-format-main">
         <p>Produto</p>
         <p>Descrição</p>
@@ -122,11 +135,21 @@ const CartItems = () => {
                 </p>
 
                 <img
-                  onClick={() => removeFromCart(product.id)}
-                  className="cartitems-remove-icon"
-                  src={cross_icon}
-                  alt="Remover item"
-                />
+  onClick={() =>
+    showToast("Remover este item do carrinho?", [
+      { label: "Cancelar", type: "cancel", onClick: () => {} },
+      {
+        label: "Remover",
+        type: "confirm",
+        onClick: () => removeFromCart(product.id),
+      },
+    ])
+  }
+  className="cartitems-remove-icon"
+  src={cross_icon}
+  alt="Remover item"
+/>
+
               </div>
 
               <hr />
@@ -159,12 +182,22 @@ const CartItems = () => {
             </button>
 
             <button
-              onClick={clearCart}
-              className="whatsapp-button"
-              style={{ background: "#ff3b30", marginTop: "10px" }}
-            >
-              LIMPAR CARRINHO 🗑
-            </button>
+  onClick={() =>
+    showToast("Deseja realmente limpar o carrinho?", [
+      { label: "Cancelar", type: "cancel", onClick: () => {} },
+      {
+        label: "Limpar",
+        type: "confirm",
+        onClick: () => clearCart(),
+      },
+    ])
+  }
+  className="whatsapp-button"
+  style={{ background: "#ff3b30", marginTop: "10px" }}
+>
+  LIMPAR CARRINHO 🗑
+</button>
+
           </div>
         </div>
       )}

@@ -1,0 +1,90 @@
+.toast-root {
+  position: fixed;
+  top: 85px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 4000;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 220px;
+  max-width: 420px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: toast-in 260ms cubic-bezier(.2,.9,.3,1);
+  line-height: 1.25;
+}
+
+.toast.default {
+  background: rgba(0,0,0,0.78);
+}
+
+.toast.success {
+  background: linear-gradient(90deg, #0ea5a4, #06b6d4);
+}
+
+.toast.error {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+@keyframes toast-in {
+  from { transform: translateY(-6px) scale(.98); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .toast-root { left: 12px; right: 12px; top: 70px; }
+  .toast { max-width: 100%; min-width: 0; font-size: 13px; padding: 10px; }
+}
+.toast-container {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+.toast-box {
+  background: rgba(40, 40, 40, 0.92);
+  padding: 14px 20px;
+  border-radius: 14px;
+  color: white;
+  font-size: 15px;
+  max-width: 290px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.toast-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.toast-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toast-btn.cancel {
+  background: #555;
+  color: white;
+}
+
+.toast-btn.confirm {
+  background: #ff3b30;
+  color: white;
+}

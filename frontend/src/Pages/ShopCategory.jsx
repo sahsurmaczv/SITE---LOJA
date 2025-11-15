@@ -12,7 +12,6 @@ const ShopCategory = () => {
 
   const [search, setSearch] = useState("");
 
-  // 🔎 Filtra produtos pela categoria + nome pesquisado
   const filteredProducts = products.filter(
     (p) =>
       p.category === categoriaId &&
@@ -22,14 +21,12 @@ const ShopCategory = () => {
   return (
     <div className="category-page">
 
-      {/* CABEÇALHO */}
       <div className="category-header">
-        {/* Botão Voltar */}
-        <button className="back-btn" onClick={() => navigate(-1)}>
+
+        <button className="back-btn" onClick={() => navigate("/")}>
           ⬅ Voltar
         </button>
 
-        {/* Campo de Busca */}
         <div className="search-wrapper">
           <input
             type="text"
@@ -47,30 +44,32 @@ const ShopCategory = () => {
         </div>
       </div>
 
-      {/* Título da categoria */}
       <h1 className="category-title">{categoriaId.toUpperCase()}</h1>
 
-      {/* Produtos */}
       <div className="category-products-container">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div className="category-product-card" key={product.id}>
-              <Link to={`/product/${product.id}`}>
-                <div className="product-img-wrapper">
-  <img
-  src={
-    product.image?.startsWith("http")
-      ? product.image
-      : `${backend_url}${product.image}`
-  }
-  alt={product.name}
-/>
 
-</div>
+              <Link 
+                to={`/product/${product.id}`} 
+                state={{ from: `/categoria/${categoriaId}` }}
+              >
+                <div className="product-img-wrapper">
+                  <img
+                    src={
+                      product.image?.startsWith("http")
+                        ? product.image
+                        : `${backend_url}${product.image}`
+                    }
+                    alt={product.name}
+                  />
+                </div>
 
                 <p className="product-name">{product.name}</p>
                 <p className="product-price">R$ {product.new_price}</p>
               </Link>
+
             </div>
           ))
         ) : (

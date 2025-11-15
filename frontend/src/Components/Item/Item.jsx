@@ -6,27 +6,28 @@ import { backend_url, currency } from '../../App'
 const Item = (props) => {
   return (
     <div className='item'>
-      <Link to={`/product/${props.id}`}>
-  <img
-  onClick={() => window.scrollTo(0, 0)}
-  src={
-  props.image?.startsWith("http")
-    ? props.image
-    : `${backend_url}${props.image}`
-}
+      <Link 
+        to={`/product/${props.id}`} 
+        state={{ from: window.location.pathname }}
+      >
+        <img
+          onClick={() => window.scrollTo(0, 0)}
+          src={
+            props.image?.startsWith("http")
+              ? props.image
+              : `${backend_url}${props.image}`
+          }
+          alt={props.name}
+        />
+      </Link>
 
-  alt={props.name}
-/>
+      <p>{props.name}</p>
 
-</Link>
-<p>{props.name}</p>
-<div className="item-prices">
-  <div className="item-price-new">
-    {currency}{Number(props.new_price).toFixed(2)}
-  </div>
-</div>
-
-
+      <div className="item-prices">
+        <div className="item-price-new">
+          {currency}{Number(props.new_price).toFixed(2)}
+        </div>
+      </div>
     </div>
   )
 }
