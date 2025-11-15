@@ -146,8 +146,32 @@ app.get("/allproducts", async (req, res) => {
 app.post("/getcart", fetchUser, async (req, res) => {
   const user = await Users.findById(req.user.id);
   if (!user) return res.json({});
-  res.json(user.cartData);
+
+  const products = await Product.find({ available: true });
+
+  // cria mapa rápido para saber se o produto existe
+  const validIds = new Set(products.map((p) => String(p.id)));
+
+  let changed = false;
+  const cleanedCart = { ...user.cartData };
+
+  // remove itens do carrinho que não existem mais
+  for (const id in cleanedCart) {
+    if (!validIds.has(id)) {
+      cleanedCart[id] = 0;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    user.cartData = cleanedCart;
+    user.markModified("cartData");
+    await user.save();
+  }
+
+  res.json(cleanedCart);
 });
+
 app.post("/addtocart", fetchUser, async (req, res) => {
   const id = String(req.body.itemId);
   const user = await Users.findById(req.user.id);
@@ -173,6 +197,73 @@ app.post("/clearcart", fetchUser, async (req, res) => {
   await user.save();
   res.json({ success: true, cart: empty });
 });
+app.post("/removeproduct", fetchUser, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    // Marca o produto como indisponível
+    const product = await Product.findOneAndUpdate(
+      { id },
+      { available: false },
+      { new: true }
+    );
+
+    if (!product)
+      return res.json({
+        success: false,
+        message: "Produto não encontrado"
+      });
+
+    // LIMPA este produto do carrinho de TODOS os usuários
+    const users = await Users.find({});
+    for (let user of users) {
+      if (user.cartData[id] && user.cartData[id] > 0) {
+        user.cartData[id] = 0;
+        user.markModified("cartData");
+        await user.save();
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: "Produto removido e carrinhos atualizados"
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: "Erro ao remover produto" });
+  }
+});
+
+app.post("/clean-cart", fetchUser, async (req, res) => {
+  try {
+    const user = await Users.findById(req.user.id);
+    const products = await Product.find({ available: true });
+
+    const validIds = new Set(products.map(p => String(p.id)));
+
+    let altered = false;
+
+    for (let id in user.cartData) {
+      if (!validIds.has(id) && user.cartData[id] > 0) {
+        user.cartData[id] = 0;
+        altered = true;
+      }
+    }
+
+    if (altered) {
+      user.markModified("cartData");
+      await user.save();
+    }
+
+    res.json({ success: true, cart: user.cartData });
+
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
 app.listen(port, () =>
   console.log(`Servidor rodando na porta ${port}`)
 );

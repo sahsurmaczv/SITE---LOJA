@@ -2,9 +2,13 @@
 import React, { useEffect, useState } from "react";
 import "./ListProduct.css";
 import { backend_url, currency } from "../../App";
-import cross_icon from "../Assets/cross_icon.png";
+import cross_icon from "../Assets/clear.svg";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import { categories } from "../../data/categories";
 
 const ListProduct = () => {
+  const { showToast } = useToast();
+
   const [all, setAll] = useState([]);
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState(null);
@@ -20,9 +24,24 @@ const ListProduct = () => {
     fetchProducts();
   }, []);
 
-  const removeProduct = async (id) => {
-    if (!window.confirm("Deseja remover este produto?")) return;
+  // CONFIRMAÇÃO COM TOAST
+  const confirmRemove = (id) => {
+    showToast(
+      "Deseja remover este produto?",
+      "warning",
+      [
+        { label: "Cancelar", type: "cancel" },
+        {
+          label: "Remover",
+          type: "confirm",
+          onClick: () => removeProduct(id),
+        },
+      ]
+    );
+  };
 
+  // REMOVER PRODUTO
+  const removeProduct = async (id) => {
     const res = await fetch(`${backend_url}/removeproduct`, {
       method: "POST",
       headers: {
@@ -33,26 +52,34 @@ const ListProduct = () => {
     });
 
     const data = await res.json();
+
     if (data.success) {
+      showToast("Produto removido com sucesso!", "success");
       fetchProducts();
+    } else {
+      showToast(data.message || "Erro ao remover produto", "error");
     }
   };
 
+  // ABRIR EDIÇÃO
   const openEdit = (p) => {
     setEditing({ ...p });
-    setPreview(
-  p.image.startsWith("http")
-    ? p.image
-    : `${backend_url}${p.image.startsWith("/") ? p.image : "/" + p.image}`
-);
 
+    setPreview(
+      p.image.startsWith("http")
+        ? p.image
+        : `${backend_url}${p.image.startsWith("/") ? p.image : "/" + p.image
+        }`
+    );
   };
 
+  // FECHAR MODAL
   const closeEdit = () => {
     setEditing(null);
     setPreview(null);
   };
 
+  // SALVAR EDIÇÃO
   const saveEdit = async () => {
     const res = await fetch(`${backend_url}/editproduct`, {
       method: "PUT",
@@ -64,9 +91,13 @@ const ListProduct = () => {
     });
 
     const data = await res.json();
+
     if (data.success) {
+      showToast("Alterações salvas!", "success");
       closeEdit();
       fetchProducts();
+    } else {
+      showToast(data.message || "Erro ao salvar alterações", "error");
     }
   };
 
@@ -100,14 +131,14 @@ const ListProduct = () => {
         <div key={p.id} className="lp-row">
           <div className="lp-img-box">
             <img
-  src={
-    p.image?.startsWith("http")
-      ? p.image
-      : `${backend_url}${p.image.startsWith("/") ? p.image : "/" + p.image}`
-  }
-  alt=""
-/>
-
+              src={
+                p.image?.startsWith("http")
+                  ? p.image
+                  : `${backend_url}${p.image.startsWith("/") ? p.image : "/" + p.image
+                  }`
+              }
+              alt=""
+            />
           </div>
 
           <div className="lp-info">
@@ -115,7 +146,10 @@ const ListProduct = () => {
             <span className="lp-desc">{p.description}</span>
           </div>
 
-          <span className="lp-price">{currency}{p.new_price}</span>
+          <span className="lp-price">
+            {currency}
+            {p.new_price}
+          </span>
           <span className="lp-cat">{p.category}</span>
 
           <div className="lp-actions">
@@ -124,9 +158,9 @@ const ListProduct = () => {
             </button>
             <img
               src={cross_icon}
-              alt="X"
+              alt="Remover"
               className="lp-remove"
-              onClick={() => removeProduct(p.id)}
+              onClick={() => confirmRemove(p.id)}
             />
           </div>
         </div>
@@ -138,12 +172,12 @@ const ListProduct = () => {
           <div className="lp-modal" onClick={(e) => e.stopPropagation()}>
             <div className="lp-modal-top">
               <h3>Editar Produto</h3>
-              <button className="lp-close" onClick={closeEdit}>✕</button>
+              <button className="lp-close" onClick={closeEdit}>
+                ✕
+              </button>
             </div>
 
             <div className="lp-modal-grid">
-
-              {/* CAMPOS */}
               <div className="lp-col">
                 <label>Nome</label>
                 <input
@@ -171,12 +205,19 @@ const ListProduct = () => {
                 />
 
                 <label>Categoria</label>
-                <input
+                <select
                   value={editing.category}
                   onChange={(e) =>
                     setEditing({ ...editing, category: e.target.value })
                   }
-                />
+                >
+                  {categories.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+
 
                 <button className="lp-save" onClick={saveEdit}>
                   Salvar alterações
@@ -188,7 +229,6 @@ const ListProduct = () => {
                 <label>Preview da imagem</label>
                 <img className="lp-preview" src={preview} alt="preview" />
               </div>
-
             </div>
           </div>
         </div>

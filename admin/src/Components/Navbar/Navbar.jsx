@@ -2,7 +2,7 @@ import React from "react";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const AdminNavbar = () => {
   const navigate = useNavigate();
 
   const logout = () => {
@@ -11,29 +11,27 @@ const Navbar = () => {
   };
 
   return (
-    <header className="admin-navbar">
-      <div className="container-center nav-inner">
+    <header className="admin-nav-container">
+      <nav className="admin-nav">
 
-        <div className="nav-left">
-          <span className="nav-title">Painel Admin</span>
+        {/* LOGO / TÍTULO */}
+        <div className="admin-logo">
+          <span>Painel Administrativo</span>
         </div>
 
-        <div className="nav-right">
-          <button className="btn btn-ghost" onClick={() => navigate("/admin/listproduct")}>
-            Produtos
-          </button>
+        {/* LINKS */}
+        <ul className="admin-nav-links">
+          <li><button className="admin-link" onClick={() => navigate("/admin/listproduct")}>Produtos</button></li>
+          <li><button className="admin-link" onClick={() => navigate("/admin/addproduct")}>Adicionar</button></li>
+        </ul>
 
-          <button className="btn btn-ghost" onClick={() => navigate("/admin/addproduct")}>
-            Adicionar
-          </button>
-
-          <button className="btn logout-btn" onClick={logout}>
-            Logout
-          </button>
+        {/* AÇÕES */}
+        <div className="admin-actions">
+          <button className="admin-logout-btn" onClick={logout}>Logout</button>
         </div>
-      </div>
+      </nav>
     </header>
   );
 };
 
-export default Navbar;
+export default AdminNavbar;

@@ -1,44 +1,69 @@
-.admin-navbar{
+.admin-nav-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background: var(--bg);
-  color: #fff;
-  z-index: 1200;
-  border-bottom: 2px solid var(--accent);
-  height: 70px;
+  z-index: 2000;
+}
+
+.admin-nav {
+  height: 60px;
+  background: #0c0c0c;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  border-bottom: 1px solid #1c1c1c;
+  gap: 28px;
 }
 
-.nav-inner{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  height:100%;
-}
-
-.nav-left{display:flex;align-items:center;gap:12px}
-.nav-logo-img{width:40px;height:40px;object-fit:contain}
-.nav-title{font-weight:700;letter-spacing:0.6px}
-
-.nav-right{display:flex;gap:12px;align-items:center}
-
-/* buttons */
-.btn-ghost{
-  background: transparent;
+/* LOGO / TÍTULO */
+.admin-logo span {
   color: #eaeaea;
-  border: 1px solid rgba(255,255,255,0.06);
-  padding:8px 12px;
-  border-radius:10px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  font-weight: 500;
 }
-.logout-btn{
-  background: var(--accent);
-  color: white;
-  padding:8px 12px;
-  border-radius:10px;
-  border:none;
-  font-weight:600;
+
+/* LINKS */
+.admin-nav-links {
+  display: flex;
+  list-style: none;
+  gap: 26px;
+}
+
+.admin-link {
+  background: transparent;
+  border: none;
+  color: #d9d9d9;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-link:hover {
+  color: #007aff;
+}
+
+/* BOTÃO LOGOUT */
+.admin-logout-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #eaeaea;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.admin-logout-btn:hover {
+  border-color: #ff3b30; /* vermelho suave estilo Apple */
+  color: #ff3b30;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .admin-nav-links {
+    display: none;
+  }
 }

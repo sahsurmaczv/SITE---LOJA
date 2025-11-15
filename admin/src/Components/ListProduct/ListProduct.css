@@ -1,13 +1,12 @@
-/* ================================
-   CONTAINER
-================================ */
+/* CONTAINER GERAL */
 .lp-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
+  animation: fadeIn 0.4s ease-out;
 }
 
-/* HEADER */
+/* TÍTULO + BUSCA */
 .lp-header {
   display: flex;
   justify-content: space-between;
@@ -16,123 +15,129 @@
 }
 
 .lp-header h2 {
-  font-size: 26px;
-  color: #007aff;
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
 }
 
 .lp-search {
-  padding: 12px 16px;
+  padding: 10px 14px;
   width: 260px;
-  border-radius: 10px;
-  border: 1px solid #dadada;
+  border: 1px solid #d1d1d1;
+  border-radius: 12px;
   background: #fafafa;
+  transition: 0.2s;
 }
 
-/* ================================
-   TABLE HEAD
-================================ */
+.lp-search:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 6px rgba(0, 122, 255, 0.25);
+}
+
+/* GRID DO CABEÇALHO */
 .lp-table-head {
   display: grid;
-  grid-template-columns: 140px 1fr 120px 140px 120px;
-  padding: 12px 0;
-  color: #555;
+  grid-template-columns: 120px 1fr 120px 150px 120px;
   font-weight: 600;
+  font-size: 15px;
+  padding: 10px 0;
+  text-align: center;
+  border-bottom: 1px solid #e3e3e3;
+  color: #444;
 }
 
-/* ================================
-   LINHA
-================================ */
+/* GRID DAS LINHAS */
 .lp-row {
   display: grid;
-  grid-template-columns: 140px 1fr 120px 140px 120px;
-  padding: 16px 0;
-  background: #ffffff;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-  padding-left: 12px;
+  grid-template-columns: 120px 1fr 120px 150px 120px;
   align-items: center;
+  text-align: center;
+  padding: 16px 0;
+  font-size: 15px;
 }
 
+.lp-row:not(:last-child) {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+/* IMAGENS */
 .lp-img-box img {
-  width: 90px;
-  height: 90px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
+  border-radius: 10px;
+  margin: 0 auto;
 }
 
-.lp-info {
-  display: flex;
-  flex-direction: column;
-}
-
+/* TEXTOS */
 .lp-name {
   font-size: 16px;
   font-weight: 600;
-  color: #111;
 }
 
 .lp-desc {
   font-size: 13px;
-  color: #666;
+  color: #777;
 }
 
-.lp-price {
-  font-weight: 600;
-  color: #333;
-}
-
-.lp-cat {
-  color: #444;
-}
-
-/* AÇÕES */
+/* BOTÕES */
 .lp-actions {
   display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
 .lp-btn-edit {
   background: #007aff;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 10px;
   border: none;
-  font-weight: 600;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: 0.25s;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lp-btn-edit:hover {
+  background: #0060d4;
+  transform: translateY(-2px);
 }
 
 .lp-remove {
   width: 22px;
   cursor: pointer;
-  opacity: .7;
+  opacity: 0.75;
+  transition: 0.2s;
 }
 
 .lp-remove:hover {
   opacity: 1;
+  transform: scale(1.15);
 }
 
-/* ================================
-   MODAL / OVERLAY
-================================ */
+/* MODAL */
 .lp-modal-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(1px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3000;
+  animation: fadeIn 0.25s;
 }
 
 .lp-modal {
-  width: 95%;
-  max-width: 900px;
-  max-height: 90vh;
-  background: white;
-  border-radius: 14px;
+  width: 640px;
+  background: #fff;
   padding: 25px;
-  overflow-y: auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  animation: fadeInUp 0.3s;
 }
 
 .lp-modal-top {
@@ -141,59 +146,129 @@
   align-items: center;
 }
 
+.lp-modal-top h3 {
+  font-size: 20px;
+  color: #333;
+}
+
 .lp-close {
-  background: none;
+  background: transparent;
   border: none;
   font-size: 22px;
   cursor: pointer;
+  opacity: 0.7;
 }
 
-/* GRID */
+.lp-close:hover {
+  opacity: 1;
+}
+
+/* GRID DENTRO DO MODAL */
 .lp-modal-grid {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 25px;
+  grid-template-columns: 1fr 220px;
+  gap: 20px;
   margin-top: 20px;
 }
 
 .lp-col label {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 8px 0 4px;
   display: block;
-  margin-bottom: 6px;
+  color: #444;
 }
 
 .lp-col input,
 .lp-col textarea {
   width: 100%;
-  border: 1px solid #dcdcdc;
   padding: 12px;
+  border: 1px solid #d1d1d1;
   border-radius: 10px;
-  margin-bottom: 18px;
   background: #fafafa;
+  font-size: 14px;
 }
 
-.lp-col textarea {
-  min-height: 120px;
-  resize: vertical;
+.lp-col input:focus,
+.lp-col textarea:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 6px rgba(0,122,255,0.25);
 }
 
 .lp-preview {
   width: 100%;
-  border-radius: 12px;
-  border: 1px solid #ddd;
+  height: auto;
+  border-radius: 14px;
   object-fit: contain;
-  background: white;
+  background: #f3f3f3;
+  padding: 10px;
 }
 
 /* BOTÃO SALVAR */
 .lp-save {
+  margin-top: 12px;
   width: 100%;
-  background: #007aff;
-  border: none;
-  color: white;
   padding: 12px;
-  border-radius: 10px;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.25s;
+}
+
+.lp-save:hover {
+  background: #0063cc;
+  transform: translateY(-2px);
+}
+
+/* ANIMAÇÕES */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .lp-table-head,
+  .lp-row {
+    grid-template-columns: 90px 1fr 90px 120px 90px;
+    font-size: 13px;
+  }
+
+  .lp-modal {
+    width: 92%;
+  }
+
+  .lp-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .img-col {
+    text-align: center;
+  }
+}
+
+.lp-col select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.lp-col select:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 6px rgba(0,122,255,0.25);
+  outline: none;
 }

@@ -3,11 +3,17 @@ import { backend_url } from "../App";
 import { useToast } from "../Components/Toast/ToastProvider";
 
 export const ShopContext = createContext(null);
+
 const ShopContextProvider = (props) => {
   const { showToast } = useToast();
+
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [loadingCart, setLoadingCart] = useState(true);
+
+  // ================================
+  // CARREGAR PRODUTOS
+  // ================================
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -18,14 +24,21 @@ const ShopContextProvider = (props) => {
         console.error("Erro ao carregar produtos:", err);
       }
     };
+
     loadProducts();
   }, []);
+
+  // ================================
+  // CARREGAR CARRINHO DO USUÁRIO
+  // ================================
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
+
     if (!token) {
       setLoadingCart(false);
       return;
     }
+
     const loadCart = async () => {
       try {
         const res = await fetch(`${backend_url}/getcart`, {
@@ -35,29 +48,60 @@ const ShopContextProvider = (props) => {
             "auth-token": token,
           },
         });
+
         const data = await res.json();
+
         if (data && typeof data === "object") {
           setCartItems(data);
         }
+
       } catch (err) {
         console.error("Erro ao carregar carrinho:", err);
       } finally {
         setLoadingCart(false);
       }
     };
+
     loadCart();
   }, [products]);
+
+  // ============================================================
+  // LIMPAR AUTOMATICAMENTE PRODUTOS QUE NÃO EXISTEM MAIS
+  // ============================================================
+  useEffect(() => {
+    if (products.length === 0) return;
+
+    setCartItems((prev) => {
+      const newCart = {};
+
+      products.forEach((p) => {
+        if (prev[p.id] > 0) {
+          newCart[p.id] = prev[p.id];
+        }
+      });
+
+      return newCart;
+    });
+  }, [products]);
+
+  // ================================
+  // FUNÇÕES DO CARRINHO
+  // ================================
   const addToCart = async (itemId) => {
     const token = localStorage.getItem("auth-token");
+
     if (!token) {
       showToast("Faça login para adicionar ao carrinho");
       return;
     }
+
     setCartItems((prev) => ({
       ...prev,
       [itemId]: (prev[itemId] || 0) + 1,
     }));
+
     showToast("Produto adicionado ao carrinho!");
+
     await fetch(`${backend_url}/addtocart`, {
       method: "POST",
       headers: {
@@ -67,6 +111,7 @@ const ShopContextProvider = (props) => {
       body: JSON.stringify({ itemId }),
     });
   };
+
   const removeFromCart = async (itemId) => {
     const token = localStorage.getItem("auth-token");
 
@@ -74,6 +119,7 @@ const ShopContextProvider = (props) => {
       ...prev,
       [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
     }));
+
     if (token) {
       await fetch(`${backend_url}/removefromcart`, {
         method: "POST",
@@ -85,10 +131,13 @@ const ShopContextProvider = (props) => {
       });
     }
   };
+
   const clearCart = async () => {
     const token = localStorage.getItem("auth-token");
     if (!token) return;
+
     setCartItems({});
+
     await fetch(`${backend_url}/clearcart`, {
       method: "POST",
       headers: {
@@ -97,8 +146,13 @@ const ShopContextProvider = (props) => {
       },
     });
   };
+
+  // ================================
+  // TOTAL DO CARRINHO
+  // ================================
   const getTotalCartAmount = () => {
     let total = 0;
+
     for (const id in cartItems) {
       const quantity = cartItems[id];
       if (quantity > 0) {
@@ -106,11 +160,14 @@ const ShopContextProvider = (props) => {
         if (product) total += product.new_price * quantity;
       }
     }
+
     return total;
   };
+
   const getTotalCartItems = () => {
-    return Object.values(cartItems).reduce((a, b) => a + b, 0);
+    return products.reduce((sum, p) => sum + (cartItems[p.id] || 0), 0);
   };
+
   const contextValue = {
     products,
     cartItems,
@@ -121,6 +178,7 @@ const ShopContextProvider = (props) => {
     getTotalCartItems,
     loadingCart,
   };
+
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}
