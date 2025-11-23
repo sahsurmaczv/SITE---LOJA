@@ -14,88 +14,71 @@ const CartItems = () => {
     removeFromCart,
     clearCart,
     getTotalCartAmount,
+    loadingCart
   } = useContext(ShopContext);
-
   const [loaded, setLoaded] = useState(false);
-
   useEffect(() => {
-    if (products.length > 0 && Object.keys(cartItems).length > 0) {
+    if (!loadingCart && products.length > 0) {
       setLoaded(true);
     }
-  }, [products, cartItems]);
-
+  }, [loadingCart, products]);
   if (!loaded) {
     return (
       <div className="empty-cart">
-        <p>Escolha seus produtos em "Categorias"</p>
+        <p>Carregando seu carrinho...</p>
       </div>
     );
   }
-
-  // só conta produtos REAIS e DISPONÍVEIS
-  const hasItems = products.some((p) => cartItems[p.id] > 0);
-
+  const hasItems = Object.values(cartItems).some((q) => Number(q) > 0);
   const totalAmount = getTotalCartAmount();
-
   const phoneNumber = "5542991234394";
-
   const buildWhatsAppMessage = () => {
     let msg = "*Pedido via Site Neri Informática* %0A";
     msg += "%0A*Produtos escolhidos:*%0A";
-
     products.forEach((product) => {
-      const q = cartItems[product.id];
+      const q = cartItems[String(product.id)];
       if (q > 0) {
         msg += `• ${product.name} — ${q}x — R$ ${(product.new_price * q).toFixed(
           2
         )}%0A`;
       }
     });
-
     msg += "%0A----------------------------%0A";
     msg += `*Total:* R$ ${totalAmount.toFixed(2)}%0A`;
     msg += "----------------------------%0A";
     msg += "%0A*Aguardando sua confirmação!*";
-
     return msg;
   };
-
   const sendWhatsAppOrder = () => {
-    if (!hasItems) return alert("Seu carrinho está vazio ");
+    if (!hasItems) return alert("Seu carrinho está vazio");
     const url = `https://wa.me/${phoneNumber}?text=${buildWhatsAppMessage()}`;
     window.open(url, "_blank");
   };
-
   const getImageUrl = (img) =>
     img?.startsWith("http") ? img : `${backend_url}${img}`;
-
   return (
     <div className="cartitems fade-in">
       <button className="cart-back-btn" onClick={() => window.history.back()}>
         Voltar
       </button>
-
       <div className="cartitems-format-main">
+        <p>Imagem</p>
         <p>Produto</p>
-        <p>Descrição</p>
         <p>Preço</p>
         <p>Qtd</p>
         <p>Total</p>
         <p>Remover</p>
       </div>
-
       <hr />
-
       {!hasItems ? (
         <div className="empty-cart">
           <p>Seu carrinho está vazio</p>
         </div>
       ) : (
         products
-          .filter((product) => cartItems[product.id] > 0) // só produtos válidos
+          .filter((product) => cartItems[String(product.id)] > 0)
           .map((product) => {
-            const quantity = cartItems[product.id];
-
+            const quantity = cartItems[String(product.id)];
             return (
               <div key={product.id}>
                 <div className="cartitems-format-main cartitems-format">
@@ -104,16 +87,13 @@ const CartItems = () => {
                     src={getImageUrl(product.image)}
                     alt={product.name}
                   />
-
                   <p className="cartitems-product-title">{product.name}</p>
-
                   <p>
                     {currency}
                     {Number(product.new_price).toLocaleString("pt-BR", {
                       minimumFractionDigits: 2,
                     })}
                   </p>
-
                   <div className="cartitems-quantity-box">
                     <button
                       className="qty-btn"
@@ -131,14 +111,12 @@ const CartItems = () => {
                       +
                     </button>
                   </div>
-
                   <p>
                     {currency}
                     {(product.new_price * quantity).toLocaleString("pt-BR", {
                       minimumFractionDigits: 2,
                     })}
                   </p>
-
                   <img
                     onClick={() =>
                       showToast("Remover este item do carrinho?", "warning", [
@@ -160,7 +138,6 @@ const CartItems = () => {
             );
           })
       )}
-
       {hasItems && (
         <div className="cartitems-down">
           <div className="cartitems-total card">
@@ -175,9 +152,7 @@ const CartItems = () => {
                   })}
                 </p>
               </div>
-
               <hr />
-
               <div className="cartitems-total-item">
                 <h3>Total</h3>
                 <h3>
@@ -188,11 +163,9 @@ const CartItems = () => {
                 </h3>
               </div>
             </div>
-
             <button onClick={sendWhatsAppOrder} className="whatsapp-button">
               ENVIAR PEDIDO VIA WHATSAPP
             </button>
-
             <button
               onClick={() =>
                 showToast("Deseja realmente limpar o carrinho?", "warning", [

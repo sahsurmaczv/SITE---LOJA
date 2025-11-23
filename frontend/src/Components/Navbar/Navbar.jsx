@@ -4,12 +4,11 @@ import { Link } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart.svg";
 import menu_icon from "../Assets/menu.svg";  
-
 import { ShopContext } from "../../Context/ShopContext";
 
 const Navbar = ({ onOpenSidebar }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { getTotalCartItems } = useContext(ShopContext);
+  const { getTotalCartItems, logoutCleanup } = useContext(ShopContext);
   const toggleMobileMenu = () => setMenuOpen(!menuOpen);
   return (
     <header className="nav-container">
@@ -38,6 +37,7 @@ const Navbar = ({ onOpenSidebar }) => {
               className="login-btn"
               onClick={() => {
                 localStorage.removeItem("auth-token");
+                logoutCleanup();
                 window.location.reload();
               }}
             >

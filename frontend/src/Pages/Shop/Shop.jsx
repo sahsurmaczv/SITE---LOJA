@@ -28,7 +28,6 @@ const Shop = () => {
           <div className="service-card">
             <p>Manutenção <br />em geral</p>
           </div>
-
           <div className="service-card">
             <p>Venda de peças e computadores</p>
           </div>

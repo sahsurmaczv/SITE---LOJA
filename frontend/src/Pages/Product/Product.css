@@ -1,6 +1,6 @@
 .productpage {
   max-width: 1200px;
-  margin: 20px auto 40px; 
+  margin: 20px auto 40px;
   padding: 0 20px;
 }
 
@@ -15,7 +15,7 @@
   color: #007aff;
   transition: 0.25s ease;
   margin-bottom: 20px;
-  margin-top: -10px; 
+  margin-top: -10px;
 }
 
 .back-btn-product:hover {

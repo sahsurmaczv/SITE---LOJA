@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./LoginSignup.css";
 import { backend_url } from "../../App";
 import { useToast } from "../../Components/Toast/ToastProvider";
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [state, setState] = useState("Login");
   const [formData, setFormData] = useState({
     username: "",
@@ -31,8 +33,7 @@ const LoginSignup = () => {
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
         showToast("Login realizado com sucesso!", "success");
-
-        setTimeout(() => (window.location.href = "/"), 900);
+        navigate("/");
       } else {
         showToast(dataObj.message || "Erro no login", "error");
       }
@@ -57,10 +58,9 @@ const LoginSignup = () => {
       });
       const dataObj = await resp.json();
       if (dataObj.success) {
-        showToast("Conta criada com sucesso!", "success");
         localStorage.setItem("auth-token", dataObj.token);
-
-        setTimeout(() => (window.location.href = "/"), 900);
+        showToast("Conta criada com sucesso!", "success");
+        navigate("/");
       } else {
         showToast(dataObj.message || "Erro no cadastro", "error");
       }

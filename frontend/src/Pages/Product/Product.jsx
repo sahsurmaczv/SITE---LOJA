@@ -29,7 +29,6 @@ const Product = () => {
       <button className="back-btn-product" onClick={handleBack}>
         Voltar
       </button>
-
       <ProductDisplay product={product} />
     </div>
   );

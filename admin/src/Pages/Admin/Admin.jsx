@@ -1,6 +1,6 @@
 import React from "react";
-import AddProduct from "../../components/AddProduct/AddProduct";
-import ListProduct from "../../components/ListProduct/ListProduct";
+import AddProduct from "../../Components/AddProduct/AddProduct";
+import ListProduct from "../../Components/ListProduct/ListProduct";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./Admin.css";
 

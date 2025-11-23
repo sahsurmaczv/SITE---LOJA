@@ -21,7 +21,6 @@ const ShopCategory = () => {
         <button className="back-btn" onClick={() => navigate("/")}>
           Voltar
         </button>
-
         <div className="search-wrapper">
           <input
             type="text"
@@ -34,7 +33,6 @@ const ShopCategory = () => {
             <button className="clear-search" onClick={() => setSearch("")}>
               <img src={clear_icon} alt="Limpar busca" className="clear-icon" />
             </button>
-
           )}
         </div>
       </div>

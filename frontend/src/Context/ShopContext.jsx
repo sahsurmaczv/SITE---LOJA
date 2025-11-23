@@ -1,19 +1,30 @@
 import React, { createContext, useEffect, useState } from "react";
 import { backend_url } from "../App";
 import { useToast } from "../Components/Toast/ToastProvider";
-
 export const ShopContext = createContext(null);
 
+const normalizeCart = (raw) => {
+  const out = {};
+  for (const key in raw) {
+    out[String(key)] = Number(raw[key]) || 0;
+  }
+  return out;
+};
 const ShopContextProvider = (props) => {
   const { showToast } = useToast();
-
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [loadingCart, setLoadingCart] = useState(true);
-
-  // ================================
-  // CARREGAR PRODUTOS
-  // ================================
+  const [token, setToken] = useState(localStorage.getItem("auth-token"));
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const saved = localStorage.getItem("auth-token");
+      if (saved !== token) {
+        setToken(saved);
+      }
+    }, 300);
+    return () => clearInterval(interval);
+  }, [token]);
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -24,21 +35,14 @@ const ShopContextProvider = (props) => {
         console.error("Erro ao carregar produtos:", err);
       }
     };
-
     loadProducts();
   }, []);
-
-  // ================================
-  // CARREGAR CARRINHO DO USUÁRIO
-  // ================================
   useEffect(() => {
-    const token = localStorage.getItem("auth-token");
-
     if (!token) {
+      setCartItems({});
       setLoadingCart(false);
       return;
     }
-
     const loadCart = async () => {
       try {
         const res = await fetch(`${backend_url}/getcart`, {
@@ -48,60 +52,29 @@ const ShopContextProvider = (props) => {
             "auth-token": token,
           },
         });
-
         const data = await res.json();
-
         if (data && typeof data === "object") {
-          setCartItems(data);
+          setCartItems(normalizeCart(data));
         }
-
       } catch (err) {
         console.error("Erro ao carregar carrinho:", err);
       } finally {
         setLoadingCart(false);
       }
     };
-
     loadCart();
-  }, [products]);
-
-  // ============================================================
-  // LIMPAR AUTOMATICAMENTE PRODUTOS QUE NÃO EXISTEM MAIS
-  // ============================================================
-  useEffect(() => {
-    if (products.length === 0) return;
-
-    setCartItems((prev) => {
-      const newCart = {};
-
-      products.forEach((p) => {
-        if (prev[p.id] > 0) {
-          newCart[p.id] = prev[p.id];
-        }
-      });
-
-      return newCart;
-    });
-  }, [products]);
-
-  // ================================
-  // FUNÇÕES DO CARRINHO
-  // ================================
+  }, [token]);
   const addToCart = async (itemId) => {
-    const token = localStorage.getItem("auth-token");
-
     if (!token) {
       showToast("Faça login para adicionar ao carrinho");
       return;
     }
-
-    setCartItems((prev) => ({
-      ...prev,
-      [itemId]: (prev[itemId] || 0) + 1,
-    }));
-
+    setCartItems((prev) => {
+      const updated = { ...prev };
+      updated[itemId] = (updated[itemId] || 0) + 1;
+      return updated;
+    });
     showToast("Produto adicionado ao carrinho!");
-
     await fetch(`${backend_url}/addtocart`, {
       method: "POST",
       headers: {
@@ -111,15 +84,12 @@ const ShopContextProvider = (props) => {
       body: JSON.stringify({ itemId }),
     });
   };
-
   const removeFromCart = async (itemId) => {
-    const token = localStorage.getItem("auth-token");
-
-    setCartItems((prev) => ({
-      ...prev,
-      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
-    }));
-
+    setCartItems((prev) => {
+      const updated = { ...prev };
+      updated[itemId] = Math.max((updated[itemId] || 0) - 1, 0);
+      return updated;
+    });
     if (token) {
       await fetch(`${backend_url}/removefromcart`, {
         method: "POST",
@@ -131,13 +101,13 @@ const ShopContextProvider = (props) => {
       });
     }
   };
-
-  const clearCart = async () => {
-    const token = localStorage.getItem("auth-token");
-    if (!token) return;
-
+  const logoutCleanup = () => {
     setCartItems({});
-
+    setToken(null);
+  };
+  const clearCart = async () => {
+    if (!token) return;
+    setCartItems({});
     await fetch(`${backend_url}/clearcart`, {
       method: "POST",
       headers: {
@@ -146,28 +116,20 @@ const ShopContextProvider = (props) => {
       },
     });
   };
-
-  // ================================
-  // TOTAL DO CARRINHO
-  // ================================
   const getTotalCartAmount = () => {
     let total = 0;
-
     for (const id in cartItems) {
       const quantity = cartItems[id];
       if (quantity > 0) {
-        const product = products.find((p) => p.id === Number(id));
+        const product = products.find((p) => String(p.id) === String(id));
         if (product) total += product.new_price * quantity;
       }
     }
-
     return total;
   };
-
   const getTotalCartItems = () => {
-    return products.reduce((sum, p) => sum + (cartItems[p.id] || 0), 0);
+    return Object.values(cartItems).reduce((sum, q) => sum + Number(q), 0);
   };
-
   const contextValue = {
     products,
     cartItems,
@@ -177,8 +139,10 @@ const ShopContextProvider = (props) => {
     getTotalCartAmount,
     getTotalCartItems,
     loadingCart,
+    logoutCleanup,
+    token,
+    setToken,
   };
-
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}

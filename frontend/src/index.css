@@ -5,7 +5,8 @@
   font-family: 'Poppins', sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -22,7 +23,7 @@ body {
 
 .main-content {
   flex: 1;
-  margin-top: 60px; 
+  margin-top: 60px;
   padding: 0;
 }
 

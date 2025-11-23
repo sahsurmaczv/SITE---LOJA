@@ -26,7 +26,6 @@ const Footer = () => {
       <div className="footer-copy">
         <p>© {new Date().getFullYear()} — Neri Informática. Todos os direitos reservados.</p>
       </div>
-
     </footer>
   );
 };

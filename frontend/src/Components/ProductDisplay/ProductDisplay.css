@@ -7,7 +7,6 @@
   margin-top: 20px;
 }
 
-/* LEFT */
 .pd-left {
   flex: 1;
   display: flex;
@@ -19,10 +18,9 @@
   max-width: 550px;
   border-radius: 20px;
   object-fit: cover;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* RIGHT */
 .pd-right {
   flex: 1;
   display: flex;
@@ -78,7 +76,6 @@
   color: #007aff;
 }
 
-/* Responsivo */
 @media (max-width: 900px) {
   .pd-container {
     flex-direction: column;

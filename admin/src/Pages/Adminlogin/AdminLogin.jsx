@@ -9,21 +9,17 @@ const AdminLogin = ({ setToken }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     try {
       const res = await fetch(`${backend_url}/adminlogin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
-
       if (data.success && data.token) {
         localStorage.setItem("admin_token", data.token);
         setToken(data.token);
@@ -38,13 +34,10 @@ const AdminLogin = ({ setToken }) => {
       setLoading(false);
     }
   };
-
   return (
     <div className="admin-login-page">
       <div className="admin-login-container">
-
         <h1>Painel Administrativo</h1>
-
         <form className="admin-login-fields" onSubmit={handleLogin}>
           <input
             type="email"
@@ -53,7 +46,6 @@ const AdminLogin = ({ setToken }) => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           <input
             type="password"
             placeholder="Senha"
@@ -61,12 +53,10 @@ const AdminLogin = ({ setToken }) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-
           <button type="submit" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
-
         {error && <p className="admin-error">{error}</p>}
       </div>
     </div>

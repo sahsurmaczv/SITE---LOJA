@@ -44,6 +44,7 @@
   background: #f1f1f1;
   color: #333;
 }
+
 .toast-btn.cancel:hover {
   background: #e2e2e2;
 }
@@ -52,6 +53,7 @@
   background: #007aff;
   color: white;
 }
+
 .toast-btn.confirm:hover {
   background: #0063d4;
 }
@@ -61,6 +63,7 @@
     opacity: 0;
     transform: translateY(15px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);

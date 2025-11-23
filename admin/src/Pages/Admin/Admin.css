@@ -1,7 +1,13 @@
-@media(max-width:1000px){
-  .container-center{padding:18px}
-  aside{display:none} /* hide sidebar on small screens */
+@media(max-width:1000px) {
+  .container-center {
+    padding: 18px
+  }
+
+  aside {
+    display: none
+  }
 }
+
 .admin-content {
   width: 100%;
   max-width: 1100px;
